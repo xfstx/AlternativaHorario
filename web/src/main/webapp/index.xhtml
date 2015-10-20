@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Alternativa Horario</title>
+    </h:head>
+    <h:body>
+        <div align="center">
+            <h:form id="formPrincipal">
+                <h1>Alternativa Horario</h1><br/>
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="Administracion" outcome="administracion" icon="ui-icon-star">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Login" outcome="login" icon="ui-icon-search">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Documentation" outcome="index" icon="ui-icon-document">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Consulta Usuario" outcome="consulta-usuarios" icon="ui-icon-wrench">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    <p:menuitem value="Social" outcome="index" icon="ui-icon-person">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>
+                </p:tabMenu>
+                <br/>
+                Banner
+                <br/>
+                Footer
+            </h:form>
+        </div>
+    </h:body>
+</html>
