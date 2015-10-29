@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class FachadaNegocio implements FachadaNegocioLocal {
+    
     @EJB
     private UsuarioFacadeLocal usuarioFacade;
 

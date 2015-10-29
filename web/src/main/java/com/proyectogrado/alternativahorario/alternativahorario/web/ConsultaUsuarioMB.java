@@ -37,7 +37,7 @@ public class ConsultaUsuarioMB {
     public void consultarTodosUsuarios(){
         this.usuarios = fachadaNegocio.buscarUsuario();
         for (Usuario usuario : usuarios) {
-            System.out.println(usuario.getId()+" "+usuario.getNombre());            
+            System.out.println(usuario.getId()+" "+usuario.getUsuario());            
         }
     }
     

@@ -2,13 +2,20 @@ package com.proyectogrado.alternativahorario.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalTime;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +24,10 @@ import lombok.Setter;
  * @author Steven
  */
 @Entity
-@Table(name = "usuarios")
+@Table(name = "horarios")
 @NamedQueries({
-    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")})
-public class Usuario implements Serializable {
+    @NamedQuery(name = "Horario.findAll", query = "SELECT h FROM Horario h")})
+public class Horario implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
@@ -33,28 +40,29 @@ public class Usuario implements Serializable {
     
     @Getter
     @Setter
-    @Column(name = "usuario")
-    private String usuario;
+    @Column(name = "dia")
+    private String dia;
     
     @Getter
     @Setter
-    @Column(name = "clave")
-    private String clave;
+    @Column(name = "horainicio")
+    private LocalTime horainicio;
     
     @Getter
     @Setter
-    @Column(name = "tipo")
-    private String tipo;
+    @Column(name = "horafin")
+    private LocalTime horafin;
     
     @Getter
     @Setter
-    @Column(name = "estado")
-    private String estado;
+    @JoinColumn(name = "clases", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Clase clases;
 
-    public Usuario() {
+    public Horario() {
     }
 
-    public Usuario(BigDecimal id) {
+    public Horario(BigDecimal id) {
         this.id = id;
     }
 
@@ -66,21 +74,8 @@ public class Usuario implements Serializable {
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Usuario)) {
-            return false;
-        }
-        Usuario other = (Usuario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "com.proyectogrado.alternativahorario.entidades.Usuario[ id=" + id + " ]";
+        return "com.proyectogrado.alternativahorario.entidades.Horario[ id=" + id + " ]";
     }
 
 }

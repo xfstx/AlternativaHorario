@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.1" 
-             xmlns="http://xmlns.jcp.org/xml/ns/persistence" 
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-  
-    <persistence-unit name="com.proyectogrado.AlternativaHorario_AlternativaHorario-persistencia_ejb_1.0-SNAPSHOTPU" transaction-type="JTA">
-        <jta-data-source>DSAlternativaHorario</jta-data-source>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        <properties/>
-    </persistence-unit>
-
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="com.proyectogrado.AlternativaHorario_AlternativaHorario-persistencia_ejb_1.0-SNAPSHOTPU" transaction-type="JTA">
+    <jta-data-source>DSAlternativaHorario</jta-data-source>
+    <class>com.proyectogrado.alternativahorario.entidades.Profesor</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Facultad</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Horario</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Carrera</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Materia</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Usuario</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Clase</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>
 </persistence>

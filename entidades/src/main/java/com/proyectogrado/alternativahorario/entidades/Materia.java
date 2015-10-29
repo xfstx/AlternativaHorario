@@ -1,6 +1,9 @@
 package com.proyectogrado.alternativahorario.entidades;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,8 +34,8 @@ public class Materia implements Serializable {
     @Getter
     @Setter
     @Basic(optional = false)
-    @Column(name = "codigo")
-    private String codigo;
+    @Column(name = "id")
+    private BigDecimal id;
     
     @Getter
     @Setter
@@ -41,44 +45,46 @@ public class Materia implements Serializable {
     @Getter
     @Setter
     @Column(name = "semestre")
-    private Integer semestre;
+    private BigInteger semestre;
     
     @Getter
     @Setter
-    @JoinColumn(name = "carrera", referencedColumnName = "codigo")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "creditos")
+    private BigInteger creditos;
+    
+    @Getter
+    @Setter
+    @Column(name = "intensidad_horaria")
+    private BigInteger intensidadHoraria;
+    
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "materia", fetch = FetchType.EAGER)
+    private List<Clase> claseList;
+    
+    @Getter
+    @Setter
+    @JoinColumn(name = "carrera", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Carrera carrera;
 
     public Materia() {
     }
 
-    public Materia(String codigo) {
-        this.codigo = codigo;
+    public Materia(BigDecimal id) {
+        this.id = id;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (codigo != null ? codigo.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Materia)) {
-            return false;
-        }
-        Materia other = (Materia) object;
-        if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "com.proyectogrado.alternativahorario.entidades.Materia[ codigo=" + codigo + " ]";
+        return "com.proyectogrado.alternativahorario.entidades.Materia[ id=" + id + " ]";
     }
 
 }
