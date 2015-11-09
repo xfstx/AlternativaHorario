@@ -2,6 +2,7 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Usuario;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -17,7 +18,7 @@ import lombok.Setter;
  */
 @Named(value = "consultaUsuario")
 @RequestScoped
-public class ConsultaUsuarioMB {
+public class ConsultaUsuarioMB implements Serializable{
     
     @EJB
     private FachadaNegocioLocal fachadaNegocio;

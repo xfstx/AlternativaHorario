@@ -9,6 +9,8 @@
     <class>com.proyectogrado.alternativahorario.entidades.Materia</class>
     <class>com.proyectogrado.alternativahorario.entidades.Usuario</class>
     <class>com.proyectogrado.alternativahorario.entidades.Clase</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Sede</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Menu</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>

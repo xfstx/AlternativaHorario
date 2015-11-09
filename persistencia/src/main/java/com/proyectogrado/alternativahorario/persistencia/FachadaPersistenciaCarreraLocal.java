@@ -1,3 +1,4 @@
+
 package com.proyectogrado.alternativahorario.persistencia;
 
 import com.proyectogrado.alternativahorario.entidades.Carrera;
@@ -9,7 +10,7 @@ import javax.ejb.Local;
  * @author Steven
  */
 @Local
-public interface CarreraFacadeLocal {
+public interface FachadaPersistenciaCarreraLocal {
 
     void create(Carrera carrera);
 

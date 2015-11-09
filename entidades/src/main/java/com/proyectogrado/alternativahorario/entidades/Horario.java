@@ -2,7 +2,6 @@ package com.proyectogrado.alternativahorario.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalTime;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -30,10 +29,10 @@ import lombok.Setter;
 public class Horario implements Serializable {
     
     private static final long serialVersionUID = 1L;
-
-    @Id
+    
     @Getter
     @Setter
+    @Id
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;
@@ -46,17 +45,19 @@ public class Horario implements Serializable {
     @Getter
     @Setter
     @Column(name = "horainicio")
-    private LocalTime horainicio;
+    @Temporal(TemporalType.TIME)
+    private Date horainicio;
     
     @Getter
     @Setter
     @Column(name = "horafin")
-    private LocalTime horafin;
+    @Temporal(TemporalType.TIME)
+    private Date horafin;
     
     @Getter
     @Setter
     @JoinColumn(name = "clases", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Clase clases;
 
     public Horario() {
@@ -64,18 +65,6 @@ public class Horario implements Serializable {
 
     public Horario(BigDecimal id) {
         this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "com.proyectogrado.alternativahorario.entidades.Horario[ id=" + id + " ]";
     }
 
 }

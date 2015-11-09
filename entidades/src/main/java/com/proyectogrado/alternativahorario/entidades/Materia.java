@@ -30,9 +30,9 @@ public class Materia implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
-    @Id
     @Getter
     @Setter
+    @Id
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;
@@ -59,13 +59,13 @@ public class Materia implements Serializable {
     
     @Getter
     @Setter
-    @OneToMany(mappedBy = "materia", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "materia", fetch = FetchType.LAZY)
     private List<Clase> claseList;
     
     @Getter
     @Setter
     @JoinColumn(name = "carrera", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Carrera carrera;
 
     public Materia() {
@@ -73,18 +73,6 @@ public class Materia implements Serializable {
 
     public Materia(BigDecimal id) {
         this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "com.proyectogrado.alternativahorario.entidades.Materia[ id=" + id + " ]";
     }
 
 }

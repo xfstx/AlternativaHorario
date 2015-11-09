@@ -9,14 +9,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
 
 /**
  *
@@ -29,10 +28,10 @@ import lombok.Setter;
 public class Carrera implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
+    
     @Getter
     @Setter
+    @Id
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;
@@ -41,6 +40,11 @@ public class Carrera implements Serializable {
     @Setter
     @Column(name = "nombre")
     private String nombre;
+    
+    @Getter
+    @Setter
+    @Column(name = "facultad")
+    private BigInteger facultad;
     
     @Getter
     @Setter
@@ -74,13 +78,7 @@ public class Carrera implements Serializable {
     
     @Getter
     @Setter
-    @JoinColumn(name = "facultad", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Facultad facultad;
-    
-    @Getter
-    @Setter
-    @OneToMany(mappedBy = "carrera", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "carrera", fetch = FetchType.LAZY)
     private List<Materia> materiaList;
 
     public Carrera() {
@@ -88,18 +86,6 @@ public class Carrera implements Serializable {
 
     public Carrera(BigDecimal id) {
         this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "com.proyectogrado.alternativahorario.entidades.Carrera[ id=" + id + " ]";
     }
 
 }

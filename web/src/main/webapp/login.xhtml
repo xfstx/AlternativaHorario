@@ -9,6 +9,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
     <h:body>
-        <div>Ingreso al Sistema</div>
+        <div align="center">
+            <img src="resources/Imgs/logo.png" alt="sd"/>
+            <h:form>
+                Acceso al Sistema :<br />
+                <p:messages autoUpdate="true" />                
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="txtUsuario" value="Usuario"  />
+                    <p:inputText id="txtUsuario" value="#{login.usuario}" required="true" />
+
+                    <p:outputLabel for="txtClave" value="Clave"  />
+                    <p:inputText id="txtClave" value="#{login.clave}" type="password" required="true"/>
+                    <h:column />
+                    <p:commandButton icon="ui-icon-key" value="Login" action="#{login.iniciarSesion()}" />                
+                </h:panelGrid>
+                <p:separator />
+            </h:form>
+        </div>
     </h:body>
 </html>

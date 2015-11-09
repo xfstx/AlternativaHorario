@@ -1,6 +1,6 @@
 package com.proyectogrado.alternativahorario.persistencia;
 
-import com.proyectogrado.alternativahorario.entidades.Facultad;
+import com.proyectogrado.alternativahorario.entidades.Carrera;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
  * @author Steven
  */
 @Stateless
-public class FacultadFacade extends AbstractFacade<Facultad> implements FacultadFacadeLocal {
+public class FachadaPersistenciaCarrera extends AbstractFacade<Carrera> implements FachadaPersistenciaCarreraLocal {
     @PersistenceContext(unitName = "com.proyectogrado.AlternativaHorario_AlternativaHorario-persistencia_ejb_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -19,8 +19,8 @@ public class FacultadFacade extends AbstractFacade<Facultad> implements Facultad
         return em;
     }
 
-    public FacultadFacade() {
-        super(Facultad.class);
+    public FachadaPersistenciaCarrera() {
+        super(Carrera.class);
     }
 
 }

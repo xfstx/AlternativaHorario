@@ -9,8 +9,8 @@ import javax.ejb.Local;
  * @author Steven
  */
 @Local
-public interface MateriaFacadeLocal {
-
+public interface FachadaPersistenciaMateriaLocal {
+    
     void create(Materia materia);
 
     void edit(Materia materia);

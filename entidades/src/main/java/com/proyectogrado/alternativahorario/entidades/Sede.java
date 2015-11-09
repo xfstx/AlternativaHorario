@@ -2,15 +2,15 @@ package com.proyectogrado.alternativahorario.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +20,10 @@ import lombok.Setter;
  * @author Steven
  */
 @Entity
-@Table(name = "facultades")
+@Table(name = "sedes")
 @NamedQueries({
-    @NamedQuery(name = "Facultad.findAll", query = "SELECT f FROM Facultad f")})
-public class Facultad implements Serializable {
+    @NamedQuery(name = "Sede.findAll", query = "SELECT s FROM Sede s")})
+public class Sede implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -41,15 +41,19 @@ public class Facultad implements Serializable {
     
     @Getter
     @Setter
-    @JoinColumn(name = "sede", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Sede sede;
+    @Column(name = "direccion")
+    private String direccion;
+    
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "sede", fetch = FetchType.LAZY)
+    private List<Facultad> facultadList;
 
-    public Facultad() {
+    public Sede() {
     }
 
-    public Facultad(BigDecimal id) {
+    public Sede(BigDecimal id) {
         this.id = id;
     }
-
+    
 }

@@ -9,8 +9,8 @@ import javax.ejb.Local;
  * @author Steven
  */
 @Local
-public interface UsuarioFacadeLocal {
-
+public interface FachadaPersistenciaUsuarioLocal {
+    
     void create(Usuario usuario);
 
     void edit(Usuario usuario);
@@ -24,5 +24,9 @@ public interface UsuarioFacadeLocal {
     List<Usuario> findRange(int[] range);
 
     int count();
+    
+    Usuario findByUsuarioClave(String usuario, String clave);
+    
+    Usuario findByUsuario(String usuario);
     
 }

@@ -2,14 +2,13 @@ package com.proyectogrado.alternativahorario.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -28,10 +27,10 @@ import lombok.Setter;
 public class Profesor implements Serializable {
     
     private static final long serialVersionUID = 1L;
-
-    @Id
+    
     @Getter
     @Setter
+    @Id
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;
@@ -48,18 +47,17 @@ public class Profesor implements Serializable {
     
     @Getter
     @Setter
+    @Column(name = "facultad")
+    private BigInteger facultad;
+    
+    @Getter
+    @Setter
     @Column(name = "tipo")
     private String tipo;
     
     @Getter
     @Setter
-    @JoinColumn(name = "facultad", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Facultad facultad;
-    
-    @Getter
-    @Setter
-    @OneToMany(mappedBy = "profesor", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "profesor", fetch = FetchType.LAZY)
     private List<Clase> claseList;
 
     public Profesor() {
@@ -67,18 +65,6 @@ public class Profesor implements Serializable {
 
     public Profesor(BigDecimal id) {
         this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "com.proyectogrado.alternativahorario.entidades.Profesor[ id=" + id + " ]";
     }
 
 }

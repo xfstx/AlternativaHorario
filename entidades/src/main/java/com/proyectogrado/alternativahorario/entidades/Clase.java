@@ -26,36 +26,36 @@ import lombok.Setter;
 @NamedQueries({
     @NamedQuery(name = "Clase.findAll", query = "SELECT c FROM Clase c")})
 public class Clase implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
-    @Id
     @Getter
     @Setter
+    @Id
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;
-    
+
     @Getter
     @Setter
     @Column(name = "grupo")
     private String grupo;
-    
+
     @Getter
     @Setter
-    @OneToMany(mappedBy = "clases", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "clases", fetch = FetchType.LAZY)
     private List<Horario> horarioList;
-    
+
     @Getter
     @Setter
     @JoinColumn(name = "materia", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Materia materia;
-    
+
     @Getter
     @Setter
     @JoinColumn(name = "profesor", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Profesor profesor;
 
     public Clase() {
@@ -63,18 +63,6 @@ public class Clase implements Serializable {
 
     public Clase(BigDecimal id) {
         this.id = id;
-    }
-   
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "com.proyectogrado.alternativahorario.entidades.Clase[ id=" + id + " ]";
     }
 
 }
