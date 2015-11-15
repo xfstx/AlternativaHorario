@@ -14,5 +14,7 @@ public interface AdministracionMateriaLocal {
     List<Materia> getMaterias();
     
     boolean eliminarMateria(Materia materia);
+    
+    void agregarMateria(Materia materia);
 
 }

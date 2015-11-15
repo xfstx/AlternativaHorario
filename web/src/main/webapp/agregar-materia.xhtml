@@ -1,16 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
     <body>
-        <div>TODO write content</div>
+
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h1>Agregar Materia</h1><br />
+                <h:form id="formAgregarMaterias">
+                    <p:messages autoUpdate="true" />  
+                    <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+
+                        <p:outputLabel for="txtNombre" value="Nombre :"  />
+                        <p:inputText id="txtNombre" value="#{agregarMateria.nombre}" required="true" /> 
+
+                        <p:outputLabel for="slcCarrera" value="Carrera :" />
+                        <p:selectOneMenu id="slcCarrera" value="#{agregarMateria.carrera}" style="width:125px" required="true">
+                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{agregarMateria.carreras}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="txtSemestres" value="Semestres :" />
+                        <p:spinner id="txtSemestres" value="#{agregarMateria.semestres}" min="0" max="15" required="true"/>
+
+                        <h:outputLabel for="txtCreditos" value="Creditos :" />
+                        <p:spinner id="txtCreditos" value="#{agregarMateria.creditos}" min="0" max="5" required="true"/>
+
+                        <h:outputLabel for="txtIntensidad" value="Intensidad Horaria :" />
+                        <p:spinner id="txtIntensidad" value="#{agregarMateria.intesidadHoraria}" min="0" max="5" required="true"/>
+
+                    </h:panelGrid>
+                    <br />
+                    <p:commandButton value="Agregar Materia" actionListener="#{agregarMateria.agregarMateria()}" />
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
     </body>
 </html>
+

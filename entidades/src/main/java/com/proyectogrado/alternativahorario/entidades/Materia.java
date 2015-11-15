@@ -45,17 +45,17 @@ public class Materia implements Serializable {
     @Getter
     @Setter
     @Column(name = "semestre")
-    private BigInteger semestre;
+    private Integer semestre;
     
     @Getter
     @Setter
     @Column(name = "creditos")
-    private BigInteger creditos;
+    private Integer creditos;
     
     @Getter
     @Setter
     @Column(name = "intensidad_horaria")
-    private BigInteger intensidadHoraria;
+    private Integer intensidadHoraria;
     
     @Getter
     @Setter

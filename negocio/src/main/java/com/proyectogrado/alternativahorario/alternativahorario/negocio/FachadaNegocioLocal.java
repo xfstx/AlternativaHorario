@@ -28,6 +28,8 @@ public interface FachadaNegocioLocal {
     
     boolean eliminarMateria(Materia materia);
     
+    void agregarMateria(Materia materia);
+    
     List<Carrera> getCarreras();
     
 }

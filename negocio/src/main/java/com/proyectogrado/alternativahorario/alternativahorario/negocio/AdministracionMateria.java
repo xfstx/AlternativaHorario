@@ -22,15 +22,20 @@ public class AdministracionMateria implements AdministracionMateriaLocal {
     }
 
     @Override
-    public boolean eliminarMateria(Materia materia) {        
+    public boolean eliminarMateria(Materia materia) {
         try {
             Materia materiaEliminar = fachadaPersistenciaMateria.find(materia);
             fachadaPersistenciaMateria.remove(materiaEliminar);
         } catch (Exception e) {
-            System.out.println("Ocurrio un error eliminando la materia "+materia.getNombre());
+            System.out.println("Ocurrio un error eliminando la materia " + materia.getNombre());
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void agregarMateria(Materia materia) {
+        fachadaPersistenciaMateria.create(materia);
     }
 
 }

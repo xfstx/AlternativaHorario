@@ -63,6 +63,11 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     }
     
     @Override
+    public void agregarMateria(Materia materia){
+        administracionMateria.agregarMateria(materia);
+    }
+    
+    @Override
     public List<Carrera> getCarreras(){
         return administracionCarrera.getCarreras();
     }
