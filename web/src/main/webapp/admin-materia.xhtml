@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h1>Administracion de Materias</h1><br />
+                <h:form id="formAdminMaterias">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <p:dataTable id="tblMaterias" var="materia" value="#{adminMateria.materias}" selection="#{adminMateria.materiasSeleccionadas}" 
+                                 widgetVar="tblMateria" emptyMessage="No se encuentran materias con este criterio" scrollable="true"
+                                 rowKey="#{materia.id}" style="margin-bottom:0" resizableColumns="true">
+
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                        <p:column headerText="Nombre" sortBy="#{materia.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{materia.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Carrera" sortBy="#{materia.carrera.nombre}" filterBy="#{materia.carrera.nombre}" filterMatchMode="exact" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('tblMateria').filter()" >
+                                    <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{adminMateria.carreras}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{materia.carrera.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Semestre" sortBy="#{materia.semestre}" filterBy="#{materia.semestre}" >
+                            <f:facet name="filter">
+                                <p:spinner onchange="PF('tblMateria').filter()" styleClass="year-spinner" min="0">
+                                    <f:converter converterId="javax.faces.Integer" />
+                                </p:spinner>
+                            </f:facet>
+                            <h:outputText value="#{materia.semestre}" />
+                        </p:column>
+
+                        <p:column headerText="Creditos" sortBy="#{materia.creditos}" >
+                            <h:outputText value="#{materia.creditos}" />
+                        </p:column>
+
+                        <p:column headerText="Intensidad Horaria" sortBy="#{materia.intensidadHoraria}" >
+                            <h:outputText value="#{materia.intensidadHoraria}" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminMateria.abrirModificarMateria(materia)}" icon="ui-icon-pencil" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminMateria.eliminarMateria(materia)}" icon="ui-icon-closethick" update="tblMaterias"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonEliminar" value="Eliminar Materias" icon="ui-icon-closethick" actionListener="#{adminMateria.eliminarMaterias}" update="tblMaterias"/>
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonAgregar" value="Agregar Materia" icon="fa-plus-square" onclick="PF('pnlAgregarMateria').show();"/>                            
+                        </f:facet>
+                    </p:dataTable> 
+
+                    <p:dialog header="Agregar Materia" widgetVar="pnlAgregarMateria" showEffect="explode" hideEffect="bounce">
+                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+                            <p:outputLabel for="txtNombre" value="Nombre :"  />
+                            <p:inputText id="txtNombre" value="#{adminMateria.nombre}" required="true" /> 
+
+                            <p:outputLabel for="slcCarrera" value="Carrera :" />
+                            <p:selectOneMenu id="slcCarrera" value="#{adminMateria.carrera}" required="true">
+                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{adminMateria.carreras}"/>
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="txtSemestres" value="Semestres :" />
+                            <p:spinner id="txtSemestres" value="#{adminMateria.semestres}" min="0" max="15" required="true"/>
+
+                            <h:outputLabel for="txtCreditos" value="Creditos :" />
+                            <p:spinner id="txtCreditos" value="#{adminMateria.creditos}" min="0" max="5" required="true"/>
+
+                            <h:outputLabel for="txtIntensidad" value="Intensidad Horaria :" />
+                            <p:spinner id="txtIntensidad" value="#{adminMateria.intesidadHoraria}" min="0" max="5" required="true"/>
+
+                        </h:panelGrid>
+                        <br />
+                        <p:commandButton value="Agregar Materia" actionListener="#{adminMateria.agregarMateria}" update="tblMaterias"/>
+                    </p:dialog>
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -25,4 +25,6 @@ public interface FachadaPersistenciaMateriaLocal {
 
     int count();
     
+    Materia findByNombre(String nombre);
+    
 }

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="formConsultaClase">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true" />
+                    <h1>Consulta Clase</h1>
+                    <p:outputLabel for="slcMateria" value="Materia : " />
+                    <p:selectOneMenu id="slcMateria" value="#{consultaClase.materia}" required="true">
+                        <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{consultaClase.materias}" />
+                        <p:ajax update="tblClases" 
+                                event="change"
+                                listener="#{consultaClase.cargarClases}" 
+                                process="slcMateria"/>
+                    </p:selectOneMenu>
+                    <br />
+                    <p:dataTable id="tblClases" var="clase" value="#{consultaClase.clases}" selection="#{consultaClase.clasesSeleccionadas}" 
+                                 widgetVar="tblClases" emptyMessage="No se encuentran clases con este criterio" scrollable="true"
+                                 rowKey="#{clase.id}" style="margin-bottom:0" resizableColumns="true">
+
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                        <p:column headerText="Grupo" sortBy="#{clase.grupo}" filterMatchMode="contains">
+                            <h:outputText value="#{clase.grupo}" />
+                        </p:column>
+
+                        <p:column headerText="Salon" sortBy="#{clase.salon}" filterMatchMode="contains">
+                            <h:outputText value="#{clase.salon}" />
+                        </p:column>
+
+                        <p:column headerText="Salon" sortBy="#{clase.dia}" filterMatchMode="contains">
+                            <h:outputText value="#{clase.salon}" />
+                        </p:column>
+
+                        <p:column headerText="Hora Inicio" sortBy="#{clase.horaInicio}" filterMatchMode="contains">
+                            <h:outputText value="#{clase.salon}" />
+                        </p:column>
+
+                        <p:column headerText="Hora Fin" sortBy="#{clase.horaFin}" filterMatchMode="contains">
+                            <h:outputText value="#{clase.horaFin}" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{consultaClase.eliminarClase(clase)}" icon="ui-icon-closethick" update="tblClases"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonEliminar" value="Eliminar Clases" icon="ui-icon-closethick" actionListener="#{consultaClase.eliminarClases}" update="tblClases"/>
+                        </f:facet>
+                    </p:dataTable>
+
+                </h:form>                
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+
+

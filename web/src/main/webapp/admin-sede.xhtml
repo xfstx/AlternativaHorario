@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formAdminSedes">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <h1>Administracion Sede</h1> 
+
+                    <p:dataTable id="tblSedes" var="sede" value="#{adminSede.sedes}" selection="#{adminSede.sedesSeleccionadas}" 
+                                 widgetVar="tblSede" emptyMessage="No se encuentran sedes con este criterio" scrollable="true"
+                                 rowKey="#{sede.id}" style="margin-bottom:0" resizableColumns="true">
+
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                        <p:column headerText="Nombre" sortBy="#{sede.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{sede.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Sede" sortBy="#{sede.direccion}" filterMatchMode="contains">
+                            <h:outputText value="#{sede.direccion}" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminSede.abrirModificarSede(sede)}" icon="ui-icon-pencil" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminSede.eliminarSede(sede)}" icon="ui-icon-closethick" update="tblSedes"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <h:outputText value="Cantidad Sedes : #{adminSede.cantidadSedes}" />
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonEliminar" value="Eliminar Sedes" icon="ui-icon-closethick" actionListener="#{adminSede.eliminarSedes}" update="tblSedes"/>
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonAgregar" value="Agregar Sede" icon="fa-plus-square" onclick="PF('pnlAgregarSede').show();"/>                            
+                        </f:facet>
+                    </p:dataTable>
+                    
+                    <p:dialog header="Agregar Sede" widgetVar="pnlAgregarSede" showEffect="explode" hideEffect="bounce">
+                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+
+                            <p:outputLabel for="txtNombre" value="Nombre :"  />
+                            <p:inputText id="txtNombre" value="#{adminSede.nombre}" required="true" /> 
+
+                            <p:outputLabel for="txtDireccion" value="Direccion :"  />
+                            <p:inputText id="txtDireccion" value="#{adminSede.direccion}" required="true" /> 
+
+                        </h:panelGrid>
+                        <br />
+                        <p:commandButton value="Agregar Sede" actionListener="#{adminSede.agregarSede}" update="tblSedes"/>
+                    </p:dialog>
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
+

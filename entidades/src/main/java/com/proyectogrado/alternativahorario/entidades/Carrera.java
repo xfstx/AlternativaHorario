@@ -3,19 +3,21 @@ package com.proyectogrado.alternativahorario.entidades;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
 
 /**
  *
@@ -23,8 +25,9 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "carreras")
+@SequenceGenerator(name="SecuenciaCarreras", sequenceName = "SEC_IDCARRERAS")
 @NamedQueries({
-    @NamedQuery(name = "Carrera.findAll", query = "SELECT c FROM Carrera c")})
+    @NamedQuery(name = "Carrera.findByNombre", query = "SELECT c FROM Carrera c WHERE c.nombre = :nombre")})
 public class Carrera implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,6 +35,7 @@ public class Carrera implements Serializable {
     @Getter
     @Setter
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SecuenciaCarreras")
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;
@@ -40,11 +44,6 @@ public class Carrera implements Serializable {
     @Setter
     @Column(name = "nombre")
     private String nombre;
-    
-    @Getter
-    @Setter
-    @Column(name = "facultad")
-    private BigInteger facultad;
     
     @Getter
     @Setter
@@ -78,8 +77,9 @@ public class Carrera implements Serializable {
     
     @Getter
     @Setter
-    @OneToMany(mappedBy = "carrera", fetch = FetchType.LAZY)
-    private List<Materia> materiaList;
+    @JoinColumn(name = "facultad", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Facultad facultad;
 
     public Carrera() {
     }

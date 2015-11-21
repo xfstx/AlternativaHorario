@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">            
+            <ui:define name="content">
+                <h1>Administracion de Carreras</h1><br />
+                <h:form id="formAdminMaterias">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <p:dataTable id="tblCarreras" var="carrera" value="#{adminCarrera.carreras}" selection="#{adminCarrera.carrerasSeleccionadas}" 
+                                 widgetVar="tblCarreras" emptyMessage="No se encuentran carreras con este criterio" scrollable="true"
+                                 rowKey="#{carrera.id}" style="margin-bottom:0" resizableColumns="true">
+
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                        <p:column headerText="Nombre" sortBy="#{carrera.nombre}" filterMatchMode="contains" style="width:220px;">
+                            <h:outputText value="#{carrera.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Facultad" sortBy="#{carrera.facultad.nombre}" filterBy="#{carrera.facultad.nombre}" filterMatchMode="exact" style="width:180px;">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('tblCarreras').filter()" >
+                                    <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{adminCarrera.facultades}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{carrera.facultad.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Plan Estudios" style="width:120px;">
+                            <h:outputText value="#{carrera.planEstudio}" />
+                        </p:column>
+
+                        <p:column headerText="Snies" style="width:70px;">
+                            <h:outputText value="#{carrera.snies}" />
+                        </p:column>
+
+                        <p:column headerText="Creditos" sortBy="#{carrera.creditos}" filterBy="#{carrera.creditos}" style="width:250px;">
+                            <f:facet name="filter">
+                                <p:spinner onchange="PF('tblCarreras').filter()" min="0">
+                                    <f:converter converterId="javax.faces.Integer" />
+                                </p:spinner>
+                            </f:facet>
+                            <h:outputText value="#{carrera.creditos}" />
+                        </p:column>
+
+                        <p:column headerText="Semestres" sortBy="#{carrera.semestres}" filterBy="#{carrera.semestres}" style="width:250px;">
+                            <f:facet name="filter">
+                                <p:spinner onchange="PF('tblCarreras').filter()" min="0">
+                                    <f:converter converterId="javax.faces.Integer" />
+                                </p:spinner>
+                            </f:facet>
+                            <h:outputText value="#{carrera.semestres}" />
+                        </p:column>
+
+                        <p:column headerText="Materias" sortBy="#{carrera.materias}" filterBy="#{carrera.materias}" style="width:250px;">
+                            <f:facet name="filter">
+                                <p:spinner onchange="PF('tblCarreras').filter()" min="0">
+                                    <f:converter converterId="javax.faces.Integer" />
+                                </p:spinner>
+                            </f:facet>
+                            <h:outputText value="#{carrera.materias}" />
+                        </p:column>
+
+                        <p:column headerText="Descripcion">
+                            <h:outputText value="#{carrera.descripcion}" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminCarrera.abrirModificarCarrera(carrera)}" icon="ui-icon-pencil" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminCarrera.eliminarCarrera(carrera)}" icon="ui-icon-closethick" update="tblCarreras"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <h:outputText value="Cantidad Carreras : #{adminCarrera.cantidadCarreras}" />
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonEliminar" value="Eliminar Carreras" icon="ui-icon-closethick" actionListener="#{adminCarrera.eliminarCarreras}" update="tblCarreras"/>
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonAgregar" value="Agregar Carrera" icon="fa-plus-square" onclick="PF('pnlAgregarCarrera').show();"/>                            
+                        </f:facet>
+
+                    </p:dataTable>
+
+                    <p:dialog id="pnlAgregarCarrera" header="Agregar Carrera" widgetVar="pnlAgregarCarrera" showEffect="explode" hideEffect="bounce">
+                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+
+                            <p:outputLabel for="txtNombre" value="Nombre :"  />
+                            <p:inputText id="txtNombre" value="#{adminCarrera.nombre}" required="true" /> 
+
+                            <p:outputLabel for="slcFacultad" value="Facultad :"  />
+                            <p:selectOneMenu id="slcFacultad" value="#{adminCarrera.facultad}" >
+                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{adminCarrera.facultades}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="txtPlan" value="Plan Estudios:"  />
+                            <p:inputText id="txtPlan" value="#{adminCarrera.planEstudios}" required="true" /> 
+
+                            <p:outputLabel for="txtSnies" value="Snies :"  />
+                            <p:inputText id="txtSnies" value="#{adminCarrera.snies}" required="true" /> 
+
+                            <p:outputLabel for="spnCreditos" value="Creditos :"  />                                
+                            <p:spinner id="spnCreditos" value="#{adminCarrera.creditos}" min="0">
+                                <f:converter converterId="javax.faces.Integer" />
+                            </p:spinner>
+
+                            <p:outputLabel for="spnSemestres" value="Semestres :"  />                                
+                            <p:spinner id="spnSemestres" value="#{adminCarrera.semestres}" min="0">
+                                <f:converter converterId="javax.faces.Integer" />
+                            </p:spinner>
+
+                            <p:outputLabel for="spnMaterias" value="Materias :"  />                                
+                            <p:spinner id="spnMaterias" value="#{adminCarrera.materias}" min="0">
+                                <f:converter converterId="javax.faces.Integer" />
+                            </p:spinner>
+
+                            <p:outputLabel for="txtDescripcion" value="Descripcion :"  />
+                            <p:inputText id="txtDescripcion" value="#{adminCarrera.descripcion}" required="true" />
+
+                        </h:panelGrid>
+                        <br />
+                        <p:commandButton value="Agregar Carrera" actionListener="#{adminCarrera.agregarCarrera}" update="tblCarreras"/>
+                    </p:dialog>
+
+                </h:form>
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>

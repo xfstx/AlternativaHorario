@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "clases")
 @NamedQueries({
-    @NamedQuery(name = "Clase.findAll", query = "SELECT c FROM Clase c")})
+    @NamedQuery(name = "Clase.findByMateria", query = "SELECT c FROM Clase c WHERE c.materia = :materia")})
 public class Clase implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -15,6 +15,12 @@ public interface AdministracionMateriaLocal {
     
     boolean eliminarMateria(Materia materia);
     
-    void agregarMateria(Materia materia);
+    List<Materia> eliminarMaterias(List<Materia> materias);
+    
+    boolean agregarMateria(Materia materia);
+    
+    boolean modificarMateria(Materia materia);
+    
+    Materia getMateriaPorNombre(String nombre);
 
 }

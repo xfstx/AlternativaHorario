@@ -4,6 +4,7 @@ import com.proyectogrado.alternativahorario.entidades.Materia;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -11,7 +12,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class FachadaPersistenciaMateria extends AbstractFacade<Materia> implements FachadaPersistenciaMateriaLocal {
-            
+
     @PersistenceContext(unitName = "com.proyectogrado.AlternativaHorario_AlternativaHorario-persistencia_ejb_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -23,5 +24,18 @@ public class FachadaPersistenciaMateria extends AbstractFacade<Materia> implemen
     public FachadaPersistenciaMateria() {
         super(Materia.class);
     }
-    
+
+    @Override
+    public Materia findByNombre(String nombre) {
+        Materia materia = null;
+        try {
+            Query query = getEntityManager().createNamedQuery("Materia.findByNombre");
+            query.setParameter("nombre", nombre);
+            materia = (Materia) query.getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Error buscando Materia por nombre " + e);
+        }
+        return materia;
+    }
+
 }

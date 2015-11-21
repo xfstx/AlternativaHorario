@@ -1,6 +1,6 @@
 package com.proyectogrado.alternativahorario.persistencia;
 
-import com.proyectogrado.alternativahorario.entidades.Carrera;
+import com.proyectogrado.alternativahorario.entidades.Facultad;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,7 +11,7 @@ import javax.persistence.Query;
  * @author Steven
  */
 @Stateless
-public class FachadaPersistenciaCarrera extends AbstractFacade<Carrera> implements FachadaPersistenciaCarreraLocal {
+public class FachadaPersistenciaFacultad extends AbstractFacade<Facultad> implements FachadaPersistenciaFacultadLocal {
     @PersistenceContext(unitName = "com.proyectogrado.AlternativaHorario_AlternativaHorario-persistencia_ejb_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -20,21 +20,21 @@ public class FachadaPersistenciaCarrera extends AbstractFacade<Carrera> implemen
         return em;
     }
 
-    public FachadaPersistenciaCarrera() {
-        super(Carrera.class);
+    public FachadaPersistenciaFacultad() {
+        super(Facultad.class);
     }
 
     @Override
-    public Carrera findByNombre(String nombre) {
-        Carrera user = null;
+    public Facultad findByNombre(String nombre) {
+        Facultad facultad = null;
         try {
-            Query query = getEntityManager().createNamedQuery("Carrera.findByNombre");
+            Query query = getEntityManager().createNamedQuery("Facultad.findByNombre");
             query.setParameter("nombre", nombre);
-            user = (Carrera) query.getSingleResult();
+            facultad = (Facultad) query.getSingleResult();
         } catch (Exception e) {
-            System.out.println("Error buscando Carrrea por nombre " + e);
+            System.out.println("Error buscando Facultad por nombre " + e);
         }
-        return user;
+        return facultad;
     }
     
 }

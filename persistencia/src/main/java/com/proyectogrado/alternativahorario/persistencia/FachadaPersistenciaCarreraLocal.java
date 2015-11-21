@@ -26,4 +26,6 @@ public interface FachadaPersistenciaCarreraLocal {
 
     int count();
     
+    Carrera findByNombre(String nombre);
+    
 }
