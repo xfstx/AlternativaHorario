@@ -10,12 +10,14 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -24,7 +26,7 @@ import org.primefaces.context.RequestContext;
 @Named(value = "adminCarrera")
 @RequestScoped
 public class AdminCarreraMB {
-    
+
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
@@ -107,6 +109,10 @@ public class AdminCarreraMB {
     @Getter
     @Setter
     private String modDescripcion;
+
+    @Getter
+    @Setter
+    private UploadedFile file;
 
     @PostConstruct
     public void init() {
@@ -241,6 +247,13 @@ public class AdminCarreraMB {
         System.out.println("Modificar Materia");
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('pnlModificarCarrera').hide();");
+    }
+
+    public void upload() {
+        if (file != null) {
+            FacesMessage message = new FacesMessage("Exitoso", file.getFileName() + " a sido cargado");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
     }
 
     public void notificarEliminacionExitosa() {

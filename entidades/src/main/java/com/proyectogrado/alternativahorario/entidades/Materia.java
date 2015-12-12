@@ -23,16 +23,17 @@ import lombok.Setter;
 /**
  *
  * @author Steven
- */
+ */ // Materia.findByCarreraSemestre
 @Entity
 @Table(name = "materias")
-@SequenceGenerator(name="SecuenciaMaterias", sequenceName = "SEC_IDMATERIAS")
+@SequenceGenerator(name = "SecuenciaMaterias", sequenceName = "SEC_IDMATERIAS")
 @NamedQueries({
-    @NamedQuery(name = "Materia.findByNombre", query = "SELECT m FROM Materia m WHERE m.nombre = :nombre")})
+    @NamedQuery(name = "Materia.findByNombre", query = "SELECT m FROM Materia m WHERE m.nombre = :nombre"),
+    @NamedQuery(name = "Materia.findByCarreraSemestre", query = "SELECT m FROM Materia m WHERE m.carrera = :carrera AND m.semestre = :semestre")})
 public class Materia implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Getter
     @Setter
     @Id
@@ -40,32 +41,32 @@ public class Materia implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;
-    
+
     @Getter
     @Setter
     @Column(name = "nombre")
     private String nombre;
-    
+
     @Getter
     @Setter
     @Column(name = "semestre")
     private Integer semestre;
-    
+
     @Getter
     @Setter
     @Column(name = "creditos")
     private Integer creditos;
-    
+
     @Getter
     @Setter
     @Column(name = "intensidad_horaria")
     private Integer intensidadHoraria;
-    
+
     @Getter
     @Setter
     @OneToMany(mappedBy = "materia", fetch = FetchType.LAZY)
     private List<Clase> claseList;
-    
+
     @Getter
     @Setter
     @JoinColumn(name = "carrera", referencedColumnName = "id")

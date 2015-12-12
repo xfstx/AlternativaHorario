@@ -44,13 +44,28 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     private AdministracionHorarioLocal administracionHorario;
 
     @Override
-    public List<Usuario> buscarUsuario() {
-        return administracionUsuario.buscarUsuario();
+    public List<Usuario> getUsuarios() {
+        return administracionUsuario.getUsuarios();
     }
 
     @Override
-    public Usuario getUsuario(String id) {
-        return administracionUsuario.getUsuario(id);
+    public boolean eliminarUsuario(Usuario usuario) {
+        return administracionUsuario.eliminarUsuario(usuario);
+    }
+
+    @Override
+    public List<Usuario> eliminarUsuarios(List<Usuario> usuarios) {
+        return administracionUsuario.eliminarUsuarios(usuarios);
+    }
+
+    @Override
+    public boolean agregarUsuario(Usuario usuario) {
+        return administracionUsuario.agregarUsuario(usuario);
+    }
+
+    @Override
+    public boolean modificarUsuario(Usuario usuario) {
+        return administracionUsuario.modificarUsuario(usuario);
     }
 
     @Override
@@ -126,6 +141,11 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     @Override
     public Materia getMateriaPorNombre(String nombre) {
         return administracionMateria.getMateriaPorNombre(nombre);
+    }
+
+    @Override
+    public List<Materia> getMateriasPorCarreraSemestre(Carrera carrera, int semestre) {
+        return administracionMateria.getMateriasPorCarreraSemestre(carrera, semestre);
     }
 
     @Override
@@ -209,7 +229,7 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     }
 
     @Override
-    public List<Clase> getClasesPorMateria(Materia materia){
+    public List<Clase> getClasesPorMateria(Materia materia) {
         return administracionClase.getClasesPorMateria(materia);
     }
 

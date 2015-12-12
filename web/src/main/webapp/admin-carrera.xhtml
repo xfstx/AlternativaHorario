@@ -89,6 +89,11 @@
 
                     </p:dataTable>
 
+                    <br />
+                    <p:fileUpload value="#{adminFacultad.file}" mode="simple" />
+                    <p:spacer width="30"/>
+                    <p:commandButton value="Subir" ajax="false" actionListener="#{adminFacultad.upload}" disabled="true" />
+                    
                     <p:dialog id="pnlAgregarCarrera" header="Agregar Carrera" widgetVar="pnlAgregarCarrera" showEffect="explode" hideEffect="bounce">
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 

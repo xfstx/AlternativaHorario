@@ -18,11 +18,35 @@
             <ui:insert name="top">             
                 <h:form>
                     <img src="resources/Imgs/logo.png" alt="logo" width="425" height="90" />
-                    <p:menubar model="#{menu.model}" >                        
+                    <p:menubar>
+                        <p:submenu label="Administracion Usuarios" icon="ui-icon-pencil">                        
+                            <p:menuitem value="Agregar Usuario" action="agregar-usuario" icon="ui-icon-document" />
+                            <p:menuitem value="Admin Usuario" action="admin-usuario" icon="ui-icon-document" />
+                        </p:submenu>
+
+                        <p:submenu label="Administracion Datos" icon="ui-icon-pencil">
+                            <p:menuitem value="Admin Sede" action="admin-sede" icon="ui-icon-document" />
+                            <p:menuitem value="Admin Facultad" action="admin-facultad" icon="ui-icon-document" />
+                            <p:menuitem value="Admin Carrera" action="admin-carrera" icon="ui-icon-document" />                            
+                        </p:submenu>
+
+                        <p:submenu label="Administracion Horario" icon="ui-icon-pencil">
+                            <p:menuitem value="Requisitos Materia" action="requisitos-materia" icon="ui-icon-document" />
+                            <p:menuitem value="Admin Materia" action="admin-materia" icon="ui-icon-document" />
+                            <p:menuitem value="Admin Clase" action="admin-clase" icon="ui-icon-document" />
+                            <p:menuitem value="Consulta Clases" action="consulta-clase" icon="ui-icon-document" />
+                        </p:submenu>
+
+                        <p:menuitem value="Alternativa Horario" action="alternativa-horario" icon="ui-icon-calculator" />
+
+                        <p:menuitem value="Configuracion Sitio" action="configurar-sitio" icon="ui-icon-wrench" />
+
+                        <p:menuitem value="Info" action="info" icon="ui-icon-info" />  
+
                         <f:facet name="options">
-                            <p:commandButton actionListener="#{menu.cerrarSesion()}" value="Cerrar Sesion" action="login?redirect=true" icon="ui-icon-extlink"/>
+                            <p:commandButton value="Iniciar Sesion" action="login" icon="ui-icon-extlink" />
                         </f:facet>
-                    </p:menubar>
+                    </p:menubar> 
                 </h:form> 
             </ui:insert>
         </div>
@@ -38,11 +62,6 @@
             <p:separator />
             <ui:insert name="bottom">Footer @Todos los Derechos Reservados</ui:insert><br />  
             <br />
-            <p:commandButton id="btnLinkMateria" value="Admin Materia" action="admin-materia" />
-            <p:commandButton id="btnLinkSede" value="Admin Sede" action="admin-sede" />
-            <p:commandButton id="btnLinkFacultad" value="Admin Facultad" action="admin-facultad" />
-            <p:commandButton id="btnLinkCarrera" value="Admin Carrera" action="admin-carrera" />
-            <p:commandButton id="btnLinkClase" value="Admin Clase" action="admin-clase" />
         </div>
 
     </h:body>

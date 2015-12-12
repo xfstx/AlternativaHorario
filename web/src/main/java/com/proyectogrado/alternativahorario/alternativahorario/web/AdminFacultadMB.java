@@ -3,17 +3,19 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Facultad;
 import com.proyectogrado.alternativahorario.entidades.Sede;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -49,6 +51,10 @@ public class AdminFacultadMB {
     @Getter
     @Setter
     private List<String> sedes;
+
+    @Getter
+    @Setter
+    private UploadedFile file;
 
     @PostConstruct
     public void init() {
@@ -154,6 +160,13 @@ public class AdminFacultadMB {
     public void cerrarModificarDialog() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('pnlModificarFacultad').hide();");
+    }
+
+    public void upload() {
+        if (file != null) {
+            FacesMessage message = new FacesMessage("Exitoso", file.getFileName() + " a sido cargado");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
     }
 
     public void notificarCreacionExitosa() {

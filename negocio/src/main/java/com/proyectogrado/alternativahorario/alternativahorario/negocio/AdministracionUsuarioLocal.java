@@ -11,10 +11,16 @@ import javax.ejb.Local;
 @Local
 public interface AdministracionUsuarioLocal {
     
-    List<Usuario> buscarUsuario();
+    List<Usuario> getUsuarios();
 
-    Usuario getUsuario(final String id);
-    
+    boolean eliminarUsuario(Usuario usuario);
+
+    List<Usuario> eliminarUsuarios(List<Usuario> usuarios);
+
+    boolean agregarUsuario(Usuario usuario);
+
+    boolean modificarUsuario(Usuario usuario);
+
     Usuario getUsuarioPorNombre(String nombre);
     
     boolean iniciarSesion(Usuario usuario);

@@ -7,11 +7,13 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -43,6 +45,10 @@ public class AdminSedeMB {
     @Getter
     @Setter
     private String direccion;
+
+    @Getter
+    @Setter
+    private UploadedFile file;
 
     @PostConstruct
     public void init() {
@@ -135,6 +141,21 @@ public class AdminSedeMB {
     public void cerrarModificarDialog() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('pnlModificarSede').hide();");
+    }
+
+    public void upload() {
+        cargarSedesArchivo();
+        if (file != null) {
+            FacesMessage message = new FacesMessage("Exitoso", file.getFileName() + " a sido cargado");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
+
+    public void cargarSedesArchivo() {
+        System.out.println(file.getContentType());
+        System.out.println(file.getContents());
+        System.out.println(file.getFileName());
+        System.out.println(file.getSize());
     }
 
     public void notificarCreacionExitosa() {

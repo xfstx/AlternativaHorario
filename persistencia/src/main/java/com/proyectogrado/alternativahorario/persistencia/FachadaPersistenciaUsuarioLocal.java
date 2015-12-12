@@ -29,4 +29,6 @@ public interface FachadaPersistenciaUsuarioLocal {
     
     Usuario findByUsuario(String usuario);
     
+    Usuario findByNombre(String usuario);
+    
 }

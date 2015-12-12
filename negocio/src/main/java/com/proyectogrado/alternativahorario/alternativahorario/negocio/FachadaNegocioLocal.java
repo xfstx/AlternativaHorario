@@ -18,9 +18,15 @@ import javax.ejb.Local;
 @Local
 public interface FachadaNegocioLocal {
 
-    List<Usuario> buscarUsuario();
+    List<Usuario> getUsuarios();
 
-    Usuario getUsuario(final String id);
+    boolean eliminarUsuario(Usuario usuario);
+
+    List<Usuario> eliminarUsuarios(List<Usuario> usuarios);
+
+    boolean agregarUsuario(Usuario usuario);
+
+    boolean modificarUsuario(Usuario usuario);
 
     Usuario getUsuarioPorNombre(String nombre);
 
@@ -52,6 +58,8 @@ public interface FachadaNegocioLocal {
 
     Materia getMateriaPorNombre(String nombre);
 
+    List<Materia> getMateriasPorCarreraSemestre(Carrera carrera, int semestre);
+    
     List<Carrera> getCarreras();
 
     boolean eliminarCarrera(Carrera carrera);

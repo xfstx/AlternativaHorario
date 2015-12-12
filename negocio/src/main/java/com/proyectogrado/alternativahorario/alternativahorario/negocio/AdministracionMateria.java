@@ -1,5 +1,6 @@
 package com.proyectogrado.alternativahorario.alternativahorario.negocio;
 
+import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Materia;
 import com.proyectogrado.alternativahorario.persistencia.FachadaPersistenciaMateriaLocal;
 import java.util.ArrayList;
@@ -68,6 +69,11 @@ public class AdministracionMateria implements AdministracionMateriaLocal {
     @Override
     public Materia getMateriaPorNombre(String nombre) {
         return fachadaPersistenciaMateria.findByNombre(nombre);
+    }
+
+    @Override
+    public List<Materia> getMateriasPorCarreraSemestre(Carrera carrera, int semestre) {
+        return fachadaPersistenciaMateria.findByCarreraSemestre(carrera, semestre);
     }
 
 }

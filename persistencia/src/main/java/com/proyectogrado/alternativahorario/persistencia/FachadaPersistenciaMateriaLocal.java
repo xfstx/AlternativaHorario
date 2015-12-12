@@ -1,5 +1,6 @@
 package com.proyectogrado.alternativahorario.persistencia;
 
+import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Materia;
 import java.util.List;
 import javax.ejb.Local;
@@ -26,5 +27,7 @@ public interface FachadaPersistenciaMateriaLocal {
     int count();
     
     Materia findByNombre(String nombre);
+    
+    List<Materia> findByCarreraSemestre(Carrera carrera, int semestre);
     
 }

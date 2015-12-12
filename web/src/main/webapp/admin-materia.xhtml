@@ -11,11 +11,11 @@
         <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
 
             <ui:define name="content">
-                <h1>Administracion de Materias</h1><br />
-                <h:form id="formAdminMaterias">
+                <h1>Administracion de Materias</h1>
+                <h:form id="formAdminMaterias" enctype="multipart/form-data">
                     <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
                     <p:dataTable id="tblMaterias" var="materia" value="#{adminMateria.materias}" selection="#{adminMateria.materiasSeleccionadas}" 
-                                 widgetVar="tblMateria" emptyMessage="No se encuentran materias con este criterio" scrollable="true"
+                                 widgetVar="tblMateria" emptyMessage="No se encuentran materias con este criterio" scrollable="true" scrollHeight="400"
                                  rowKey="#{materia.id}" style="margin-bottom:0" resizableColumns="true">
 
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
@@ -66,6 +66,10 @@
                             <p:commandButton id="btonAgregar" value="Agregar Materia" icon="fa-plus-square" onclick="PF('pnlAgregarMateria').show();"/>                            
                         </f:facet>
                     </p:dataTable> 
+
+                    <br />
+                    <p:fileUpload fileUploadListener="#{adminMateria.upload}" mode="advanced" dragDropSupport="false"
+                                  update="msgs" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
 
                     <p:dialog header="Agregar Materia" widgetVar="pnlAgregarMateria" showEffect="explode" hideEffect="bounce">
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">

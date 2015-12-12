@@ -45,6 +45,10 @@
                             <p:commandButton id="btonAgregar" value="Agregar Facultades" icon="fa-plus-square" onclick="PF('pnlAgregarFacultad').show();" />                            
                         </f:facet>
                     </p:dataTable>
+                    <br />
+                    <p:fileUpload value="#{adminFacultad.file}" mode="simple" />
+                    <p:spacer width="30"/>
+                    <p:commandButton value="Subir" ajax="false" actionListener="#{adminFacultad.upload}" disabled="true" />
                     
                     <p:dialog header="Agregar Facultad" widgetVar="pnlAgregarFacultad" showEffect="explode" hideEffect="bounce">
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
@@ -60,7 +64,7 @@
 
                         </h:panelGrid>
                         <br />
-                        <p:commandButton value="Agregar Facultad" actionListener="#{adminFacultad.agregarFacultad}" update="tblFacultades"/>
+                        <p:commandButton value="Agregar Facultad" actionListener="#{adminFacultad.agregarFacultad}" update="tblFacultades" />
                     </p:dialog>
 
                 </h:form>

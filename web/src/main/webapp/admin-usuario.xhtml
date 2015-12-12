@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formAdminUsuarios">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <h1>Administracion Usuario</h1> 
+
+                    <p:dataTable id="tblUsuarios" var="usuario" value="#{adminUsuario.usuarios}" selection="#{adminUsuario.usuariosSeleccionados}" 
+                                 widgetVar="tblUsuarios" emptyMessage="No se encuentran Usuarios con este criterio" scrollable="true"
+                                 rowKey="#{usuario.id}" style="margin-bottom:0" resizableColumns="true">
+
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                        <p:column headerText="Usuario" sortBy="#{usuario.usuario}" filterMatchMode="contains">
+                            <h:outputText value="#{usuario.usuario}" />
+                        </p:column>
+
+                        <p:column headerText="Tipo" sortBy="#{usuario.tipo}" filterMatchMode="contains">
+                            <h:outputText value="#{usuario.tipo}" />
+                        </p:column>
+                        
+                        <p:column headerText="Estado" sortBy="#{usuario.estado}" filterMatchMode="contains">
+                            <h:outputText value="#{usuario.estado}" />
+                        </p:column>
+                        
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminUsuario.aceptarUsuario(usuario)}" icon="fa-check" />
+                        </p:column>
+                        
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminUsuario.abrirModificarUsuario(usuario)}" icon="ui-icon-pencil" />
+                        </p:column>
+
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminUsuario.eliminarUsuario(usuario)}" icon="ui-icon-closethick" update="tblUsuarios"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <h:outputText value="Cantidad Usuarios : #{adminUsuario.cantidadUsuarios}" />
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonEliminar" value="Eliminar Usuarios" icon="ui-icon-closethick" actionListener="#{adminUsuario.eliminarUsuarios}" update="tblUsuarios"/>                         
+                        </f:facet>
+                    </p:dataTable>
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
+

@@ -46,6 +46,11 @@
                         </f:facet>
                     </p:dataTable>
                     
+                    <br />
+                    <p:fileUpload value="#{adminSede.file}" mode="simple" />
+                    <p:spacer width="30"/>
+                    <p:commandButton value="Subir" actionListener="#{adminSede.upload}" />
+                    
                     <p:dialog header="Agregar Sede" widgetVar="pnlAgregarSede" showEffect="explode" hideEffect="bounce">
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 

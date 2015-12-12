@@ -8,9 +8,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -38,10 +41,14 @@ public class ConsultaClaseMB {
     @Setter
     private List<Clase> clasesSeleccionadas;
 
+    @Getter
+    @Setter
+    private UploadedFile file;
+
     @PostConstruct
     public void init() {
         this.materias = new ArrayList();
-        llenarMaterias(); 
+        llenarMaterias();
         limpiarConsulta();
     }
 
@@ -59,9 +66,16 @@ public class ConsultaClaseMB {
     public void cargarClases() {
         this.clases = fachadaNegocio.getClasesPorMateria(buscarMateria(this.materia));
     }
-    
-    public Materia buscarMateria(String nombreMateria){
+
+    public Materia buscarMateria(String nombreMateria) {
         return fachadaNegocio.getMateriaPorNombre(nombreMateria);
+    }
+    
+    public void upload() {
+        if (file != null) {
+            FacesMessage message = new FacesMessage("Exitoso", file.getFileName() + " a sido cargado");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
     }
 
 }

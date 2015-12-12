@@ -3,6 +3,9 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Materia;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -14,6 +17,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -211,6 +216,49 @@ public class AdminMateriaMB {
                 this.carrera = carrera;
             }
         }
+    }
+
+    public void upload(FileUploadEvent event) {
+        UploadedFile file = event.getFile();
+        InputStream archivo;
+        try {
+            archivo = file.getInputstream();
+            cargarArchivo(archivo);
+        } catch (Exception e) {
+            System.out.println("Error leyendo archivo " + e);
+        }
+    }
+
+    public void cargarArchivo(InputStream fis) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+        String linea;
+        try {
+            while ((linea = br.readLine()) != null) {
+                try {
+                    cargarMateria(linea);
+                } catch (Exception e) {
+                    System.out.println("Error leyendo linea "+e);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error leyendo linea mientras "+e);
+        }
+    }
+
+    public void cargarMateria(String linea) {
+        System.out.println("" + linea);
+        String mate = linea.substring(0, linea.indexOf("-"));
+        String carr = linea.substring(linea.indexOf("-") + 1, linea.indexOf("+"));
+        int semes = Integer.parseInt(linea.substring(linea.indexOf("+") + 1, linea.indexOf("*")));
+        int credi = Integer.parseInt(linea.substring(linea.indexOf("*") + 1, linea.indexOf("/")));
+        int inten = Integer.parseInt(linea.substring(linea.indexOf("/") + 1));
+        Materia nuevaMateria = new Materia();
+        nuevaMateria.setNombre(mate);
+        nuevaMateria.setCarrera(buscarCarrera(carr));
+        nuevaMateria.setSemestre(semes);
+        nuevaMateria.setCreditos(credi);
+        nuevaMateria.setIntensidadHoraria(inten);
+        boolean creacion = fachadaNegocio.agregarMateria(nuevaMateria);
     }
 
     public void notificarNoSeleccion() {

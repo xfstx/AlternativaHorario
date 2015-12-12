@@ -12,7 +12,7 @@ import javax.persistence.Query;
  */
 @Stateless
 public class FachadaPersistenciaUsuario extends AbstractFacade<Usuario> implements FachadaPersistenciaUsuarioLocal {
-            
+
     @PersistenceContext(unitName = "com.proyectogrado.AlternativaHorario_AlternativaHorario-persistencia_ejb_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -24,9 +24,22 @@ public class FachadaPersistenciaUsuario extends AbstractFacade<Usuario> implemen
     public FachadaPersistenciaUsuario() {
         super(Usuario.class);
     }
-    
+
     @Override
-    public Usuario findByUsuarioClave(String usuario, String clave){
+    public Usuario findByNombre(String nombre) {
+        Usuario usuario = null;
+        try {
+            Query query = getEntityManager().createNamedQuery("Usuario.findByNombre");
+            query.setParameter("usuario", nombre);
+            usuario = (Usuario) query.getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Error buscando Usuario por nombre " + e);
+        }
+        return usuario;
+    }
+
+    @Override
+    public Usuario findByUsuarioClave(String usuario, String clave) {
         Usuario user = null;
         try {
             Query query = getEntityManager().createNamedQuery("Usuario.findByUsuarioClave");
@@ -38,9 +51,9 @@ public class FachadaPersistenciaUsuario extends AbstractFacade<Usuario> implemen
         }
         return user;
     }
-    
+
     @Override
-    public Usuario findByUsuario(String usuario){
+    public Usuario findByUsuario(String usuario) {
         Usuario user = null;
         try {
             Query query = getEntityManager().createNamedQuery("Usuario.findByUsuario");
@@ -51,5 +64,5 @@ public class FachadaPersistenciaUsuario extends AbstractFacade<Usuario> implemen
         }
         return user;
     }
-    
+
 }
