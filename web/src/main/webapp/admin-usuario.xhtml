@@ -48,9 +48,24 @@
                         <f:facet name="footer">
                             <h:outputText value="Cantidad Usuarios : #{adminUsuario.cantidadUsuarios}" />
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonEliminar" value="Eliminar Usuarios" icon="ui-icon-closethick" actionListener="#{adminUsuario.eliminarUsuarios}" update="tblUsuarios"/>                         
+                            <p:commandButton id="btonEliminar" value="Eliminar Usuarios" icon="ui-icon-closethick" actionListener="#{adminUsuario.eliminarUsuarios}" />                         
                         </f:facet>
                     </p:dataTable>
+                    
+                    <p:dialog id="pnlModificarUsuario" header="Basic Dialog" widgetVar="pnlModificarUsuario" dynamic="true" >
+                        <p:panelGrid columns="2" layout="grid">            
+                            <h:outputText value="Usuario" /> 
+                            <p:inputText value="#{adminUsuario.usuario}" /> 
+
+                            <h:outputText value="Contras" /> 
+                            <p:inputText value="#{adminUsuario.contrasena}" /> 
+
+                            <h:outputText value="Tipo" /> 
+                            <p:inputText value="#{adminUsuario.tipo}" />                             
+                        </p:panelGrid>
+                        <p:commandButton id="btnRecc" value="Rec" update="pnlModificarUsuario" />
+                        <p:commandButton id="btnModifi" value="Modificar" actionListener="#{adminUsuario.modificarUsuario}" />
+                    </p:dialog>
 
                 </h:form>
             </ui:define>

@@ -2,12 +2,13 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Usuario;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
@@ -18,9 +19,11 @@ import org.primefaces.context.RequestContext;
  * @author Steven
  */
 @Named(value = "adminUsuario")
-@RequestScoped
-public class AdminUsuarioMB {
+@ViewScoped
+public class AdminUsuarioMB implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
@@ -115,8 +118,25 @@ public class AdminUsuarioMB {
 
     public void abrirModificarUsuario(Usuario usuario) {
         System.out.println("Modificar Usuario " + usuario.getUsuario());
+        this.usuario = usuario.getUsuario();
+        this.contrasena = usuario.getClave();
+        this.tipo = usuario.getTipo();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('pnlModificarUsuario').show();");
     }
 
+    public void modificarUsuario(){
+        System.out.println("us "+this.usuario);
+        System.out.println("cl "+this.contrasena);
+        System.out.println("ti "+this.tipo);
+        cerrarModificarDialog();
+    }    
+    
+    public void cerrarModificarDialog() {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('pnlModificarUsuario').hide();");
+    }
+    
     public boolean validarUsuario() {
         Usuario usuario = fachadaNegocio.getUsuarioPorNombre(this.usuario);
         if (usuario != null) {
