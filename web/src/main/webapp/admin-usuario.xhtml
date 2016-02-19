@@ -28,15 +28,15 @@
                         <p:column headerText="Tipo" sortBy="#{usuario.tipo}" filterMatchMode="contains">
                             <h:outputText value="#{usuario.tipo}" />
                         </p:column>
-                        
+
                         <p:column headerText="Estado" sortBy="#{usuario.estado}" filterMatchMode="contains">
                             <h:outputText value="#{usuario.estado}" />
                         </p:column>
-                        
+
                         <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminUsuario.aceptarUsuario(usuario)}" icon="fa-check" />
+                            <p:commandButton actionListener="#{adminUsuario.aceptarUsuario(usuario)}" icon="ui-icon-check" update="tblUsuarios" />
                         </p:column>
-                        
+
                         <p:column style="width:40px; text-align:center;">
                             <p:commandButton actionListener="#{adminUsuario.abrirModificarUsuario(usuario)}" icon="ui-icon-pencil" />
                         </p:column>
@@ -51,20 +51,18 @@
                             <p:commandButton id="btonEliminar" value="Eliminar Usuarios" icon="ui-icon-closethick" actionListener="#{adminUsuario.eliminarUsuarios}" />                         
                         </f:facet>
                     </p:dataTable>
-                    
-                    <p:dialog id="pnlModificarUsuario" header="Basic Dialog" widgetVar="pnlModificarUsuario" dynamic="true" >
-                        <p:panelGrid columns="2" layout="grid">            
+
+                    <p:dialog id="pnlModificarUsuario" header="Modificar Usuario" widgetVar="pnlModificarUsuario" dynamic="true" >
+                        <p:panelGrid columns="2" >            
                             <h:outputText value="Usuario" /> 
                             <p:inputText value="#{adminUsuario.usuario}" /> 
-
-                            <h:outputText value="Contras" /> 
-                            <p:inputText value="#{adminUsuario.contrasena}" /> 
-
-                            <h:outputText value="Tipo" /> 
-                            <p:inputText value="#{adminUsuario.tipo}" />                             
+                            <p:outputLabel for="slcTipo" value="Tipo Usuario :"  />
+                            <p:selectOneMenu id="slcTipo" value="#{adminUsuario.tipo}">
+                                <f:selectItem itemLabel="Administrador" itemValue="Administrador" />
+                                <f:selectItem itemLabel="Operativo" itemValue="Operativo" />
+                            </p:selectOneMenu>                                                      
                         </p:panelGrid>
-                        <p:commandButton id="btnRecc" value="Rec" update="pnlModificarUsuario" />
-                        <p:commandButton id="btnModifi" value="Modificar" actionListener="#{adminUsuario.modificarUsuario}" />
+                        <p:commandButton id="btnModifi" value="Modificar" actionListener="#{adminUsuario.modificarUsuario}" update="tblUsuarios" />
                     </p:dialog>
 
                 </h:form>

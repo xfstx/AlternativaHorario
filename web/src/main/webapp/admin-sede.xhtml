@@ -7,9 +7,7 @@
       xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
-
         <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
-
             <ui:define name="content">
                 <h:form id="formAdminSedes">
                     <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
@@ -45,13 +43,13 @@
                             <p:commandButton id="btonAgregar" value="Agregar Sede" icon="fa-plus-square" onclick="PF('pnlAgregarSede').show();"/>                            
                         </f:facet>
                     </p:dataTable>
-                    
+
                     <br />
                     <p:fileUpload value="#{adminSede.file}" mode="simple" />
                     <p:spacer width="30"/>
                     <p:commandButton value="Subir" actionListener="#{adminSede.upload}" />
-                    
-                    <p:dialog header="Agregar Sede" widgetVar="pnlAgregarSede" showEffect="explode" hideEffect="bounce">
+
+                    <p:dialog id="pnlAgregarSede" header="Agregar Sede" widgetVar="pnlAgregarSede" showEffect="explode" hideEffect="bounce" dynamic="true" >
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 
                             <p:outputLabel for="txtNombre" value="Nombre :"  />
@@ -65,11 +63,23 @@
                         <p:commandButton value="Agregar Sede" actionListener="#{adminSede.agregarSede}" update="tblSedes"/>
                     </p:dialog>
 
+                    <p:dialog id="pnlModificarSede" header="Modificar Sede" widgetVar="pnlModificarSede" dynamic="true" >
+                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+
+                            <p:outputLabel for="txtNombreMod" value="Nombre :"  />
+                            <p:inputText id="txtNombreMod" value="#{adminSede.nombre}" required="true" /> 
+
+                            <p:outputLabel for="txtDireccionMod" value="Direccion :"  />
+                            <p:inputText id="txtDireccionMod" value="#{adminSede.direccion}" required="true" /> 
+
+                        </h:panelGrid>
+                        <br />
+                        <p:commandButton value="Modificar Sede" actionListener="#{adminSede.modificarSede}" update="tblSedes"/>
+                    </p:dialog>
+
                 </h:form>
             </ui:define>
-
         </ui:composition>
-
     </body>
 </html>
 

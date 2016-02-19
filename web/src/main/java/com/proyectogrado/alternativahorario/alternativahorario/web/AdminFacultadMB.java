@@ -3,11 +3,12 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Facultad;
 import com.proyectogrado.alternativahorario.entidades.Sede;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -22,9 +23,11 @@ import org.primefaces.model.UploadedFile;
  * @author Steven
  */
 @Named(value = "adminFacultad")
-@RequestScoped
-public class AdminFacultadMB {
+@ViewScoped
+public class AdminFacultadMB implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 

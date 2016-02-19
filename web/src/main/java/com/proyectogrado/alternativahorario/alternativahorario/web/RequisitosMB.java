@@ -2,11 +2,12 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Materia;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,11 @@ import org.primefaces.model.DualListModel;
  * @author Steven
  */
 @Named(value = "requisitos")
-@RequestScoped
-public class RequisitosMB {
+@ViewScoped
+public class RequisitosMB implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 

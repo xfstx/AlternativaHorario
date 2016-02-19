@@ -23,7 +23,7 @@ import org.primefaces.context.RequestContext;
 public class AdminUsuarioMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
@@ -51,10 +51,20 @@ public class AdminUsuarioMB implements Serializable {
     @Setter
     private String tipo;
 
+    @Getter
+    @Setter
+    private Usuario usuarioSeleccionado;
+
     @PostConstruct
     public void init() {
         limpiarConsulta();
         limpiarPantalla();
+    }
+
+    public void limpiarPantalla() {
+        this.usuario = "";
+        this.contrasena = "";
+        this.tipo = "";
     }
 
     public void limpiarConsulta() {
@@ -88,36 +98,18 @@ public class AdminUsuarioMB implements Serializable {
         return true;
     }
 
-    public void limpiarPantalla() {
-        this.usuario = "";
-        this.contrasena = "";
-        this.tipo = "";
-    }
-
-    public void agregarUsuario() {
-        if (validarUsuario()) {
-            Usuario usuario = new Usuario();
-            usuario.setUsuario(this.usuario);
-            usuario.setClave(this.contrasena);
-            usuario.setTipo(this.tipo);
-
-            boolean creacion = fachadaNegocio.agregarUsuario(usuario);
-            if (creacion) {
-                cerrarCrearDialog();
-                limpiarPantalla();
-                limpiarConsulta();
-                notificarCreacionExitosa();
-            } else {
-                notificarCreacionFallida();
-            }
+    public void aceptarUsuario(Usuario usuario) {
+        usuario.setEstado("ACTIVO");
+        boolean modificarUsuario = fachadaNegocio.modificarUsuario(usuario);
+        if (modificarUsuario) {
+            notificarPerfilAceptadoExitosa();
+        } else {
+            notificarPerfilAceptadoFallida();
         }
     }
 
-    public void aceptarUsuario(Usuario usuario) {
-    }
-
     public void abrirModificarUsuario(Usuario usuario) {
-        System.out.println("Modificar Usuario " + usuario.getUsuario());
+        this.usuarioSeleccionado = usuario;
         this.usuario = usuario.getUsuario();
         this.contrasena = usuario.getClave();
         this.tipo = usuario.getTipo();
@@ -125,45 +117,21 @@ public class AdminUsuarioMB implements Serializable {
         context.execute("PF('pnlModificarUsuario').show();");
     }
 
-    public void modificarUsuario(){
-        System.out.println("us "+this.usuario);
-        System.out.println("cl "+this.contrasena);
-        System.out.println("ti "+this.tipo);
+    public void modificarUsuario() {
+        this.usuarioSeleccionado.setUsuario(usuario);
+        this.usuarioSeleccionado.setTipo(tipo);
+        boolean modificarUsuario = fachadaNegocio.modificarUsuario(usuarioSeleccionado);
+        if (modificarUsuario) {
+            notificarModificacionExitosa();
+        } else {
+            notificarModificacionFallida();
+        }
         cerrarModificarDialog();
-    }    
-    
+    }
+
     public void cerrarModificarDialog() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('pnlModificarUsuario').hide();");
-    }
-    
-    public boolean validarUsuario() {
-        Usuario usuario = fachadaNegocio.getUsuarioPorNombre(this.usuario);
-        if (usuario != null) {
-            notificarUsuarioYaExiste();
-            return false;
-        }
-        return true;
-    }
-
-    public void cerrarCrearDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarUsuario').hide();");
-    }
-
-    public void notificarCreacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Usuario Creado Exitosamente");
-        Messages.addFlashGlobal(msg);
-    }
-
-    public void notificarUsuarioYaExiste() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ERROR", "Ya existe una Usuario con este Nombre");
-        Messages.addFlashGlobal(msg);
-    }
-
-    public void notificarCreacionFallida() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error en la creacion de el Usuario");
-        Messages.addFlashGlobal(msg);
     }
 
     public void notificarNoSeleccion() {
@@ -177,7 +145,27 @@ public class AdminUsuarioMB implements Serializable {
     }
 
     public void notificarEliminacionFallida() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando la Usuario");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error eliminando la Usuario");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarModificacionExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se modifico exitosamente el usuario");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarModificacionFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "No se pudo modificar el usuario");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarPerfilAceptadoExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Perfil Aceptado");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarPerfilAceptadoFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "No se pudo activar el perfil");
         Messages.addFlashGlobal(msg);
     }
 

@@ -4,13 +4,14 @@ import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNe
 import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Horario;
 import com.proyectogrado.alternativahorario.entidades.Materia;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -24,9 +25,11 @@ import org.primefaces.model.UploadedFile;
  * @author Steven
  */
 @Named(value = "adminClase")
-@RequestScoped
-public class AdminClaseMB {
+@ViewScoped
+public class AdminClaseMB implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 

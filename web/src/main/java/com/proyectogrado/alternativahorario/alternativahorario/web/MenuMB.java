@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
@@ -22,8 +22,10 @@ import org.primefaces.model.menu.MenuModel;
  * @author Steven
  */
 @Named(value = "menu")
-@SessionScoped
+@ViewScoped
 public class MenuMB implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
     
     @EJB
     private FachadaNegocioLocal fachadaNegocio;

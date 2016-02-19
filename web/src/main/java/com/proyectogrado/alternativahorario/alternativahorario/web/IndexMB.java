@@ -1,9 +1,7 @@
 package com.proyectogrado.alternativahorario.alternativahorario.web;
 
-import com.proyectogrado.alternativahorario.entidades.Usuario;
 import java.io.Serializable;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 /**
@@ -11,8 +9,10 @@ import javax.inject.Named;
  * @author Steven
  */
 @Named(value = "index")
-@RequestScoped
+@ViewScoped
 public class IndexMB implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
     
     /*
     public void verificarSesion() {

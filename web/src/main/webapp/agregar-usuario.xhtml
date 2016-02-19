@@ -20,11 +20,10 @@
                         <p:inputText id="txtUsuario" value="#{agregarUsuario.usuario}" required="true" /> 
 
                         <p:outputLabel for="txtContraseña" value="Contraseña :"  />
-                        <p:inputText id="txtContraseña" value="#{agregarUsuario.clave}" required="true" /> 
+                        <p:password id="txtContraseña" value="#{agregarUsuario.clave}" required="true" /> 
 
                         <p:outputLabel for="slcTipo" value="Tipo Usuario :"  />
                         <p:selectOneMenu id="slcTipo" value="#{agregarUsuario.tipo}">
-                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
                             <f:selectItem itemLabel="Administrador" itemValue="Administrador" />
                             <f:selectItem itemLabel="Operativo" itemValue="Operativo" />
                         </p:selectOneMenu>

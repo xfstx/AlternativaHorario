@@ -4,7 +4,7 @@ import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNe
 import com.proyectogrado.alternativahorario.entidades.Usuario;
 import java.io.Serializable;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -16,9 +16,11 @@ import lombok.Setter;
  * @author Steven
  */
 @Named(value = "login")
-@RequestScoped
+@ViewScoped
 public class LoginMB implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
     

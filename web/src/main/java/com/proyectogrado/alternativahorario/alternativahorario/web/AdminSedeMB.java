@@ -2,10 +2,11 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Sede;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -20,9 +21,11 @@ import org.primefaces.model.UploadedFile;
  * @author Steven
  */
 @Named(value = "adminSede")
-@RequestScoped
-public class AdminSedeMB {
+@ViewScoped
+public class AdminSedeMB implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
@@ -46,6 +49,10 @@ public class AdminSedeMB {
     @Setter
     private String direccion;
 
+    @Getter
+    @Setter
+    private Sede sedeSeleccionada;
+    
     @Getter
     @Setter
     private UploadedFile file;
@@ -123,24 +130,34 @@ public class AdminSedeMB {
     public void cerrarCrearDialog() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('pnlAgregarSede').hide();");
+        limpiarPantalla();
     }
 
     public void abrirModificarSede(Sede sede) {
         this.nombre = sede.getNombre();
         this.direccion = sede.getDireccion();
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlModificarSede').show();");
+        this.sedeSeleccionada = sede;
+        RequestContext.getCurrentInstance().execute("PF('pnlModificarSede').show();");
     }
 
-    public void modificarSede(Sede sede) {
-        limpiarPantalla();
-        this.nombre = sede.getNombre();
-        this.direccion = sede.getDireccion(); // TODO
+    public void modificarSede() {
+        this.sedeSeleccionada.setNombre(this.nombre);
+        this.sedeSeleccionada.setDireccion(this.direccion);
+        boolean modificarSede = fachadaNegocio.modificarSede(sedeSeleccionada);
+        if (modificarSede) {
+            notificarModificacionExitosa();
+            limpiarPantalla();
+            limpiarConsulta();
+        } else {
+            notificarModificacionFallida();
+        }
+        RequestContext.getCurrentInstance().execute("PF('pnlModificarSede').hide();");
     }
 
     public void cerrarModificarDialog() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('pnlModificarSede').hide();");
+        limpiarPantalla();
     }
 
     public void upload() {
@@ -184,8 +201,18 @@ public class AdminSedeMB {
     }
 
     public void notificarEliminacionFallida() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando la Sede");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error eliminando la Sede");
+        Messages.addFlashGlobal(msg);
+    }
+    
+    public void notificarModificacionExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se modifica la sede Exitosamente");
         Messages.addFlashGlobal(msg);
     }
 
+    public void notificarModificacionFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error al modificar la Sede");
+        Messages.addFlashGlobal(msg);
+    }
+    
 }

@@ -6,11 +6,12 @@ import com.proyectogrado.alternativahorario.entidades.Materia;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import lombok.Getter;
@@ -25,9 +26,11 @@ import org.primefaces.model.UploadedFile;
  * @author Steven
  */
 @Named(value = "adminMateria")
-@RequestScoped
-public class AdminMateriaMB {
+@ViewScoped
+public class AdminMateriaMB implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
