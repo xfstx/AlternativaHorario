@@ -3,6 +3,9 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Facultad;
 import com.proyectogrado.alternativahorario.entidades.Sede;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -27,7 +31,7 @@ import org.primefaces.model.UploadedFile;
 public class AdminFacultadMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
@@ -50,6 +54,10 @@ public class AdminFacultadMB implements Serializable {
     @Getter
     @Setter
     private String sede;
+
+    @Getter
+    @Setter
+    private Facultad facultadSeleccionada;
 
     @Getter
     @Setter
@@ -115,7 +123,7 @@ public class AdminFacultadMB implements Serializable {
         if (validarFacultad()) {
             Facultad facultad = new Facultad();
             facultad.setNombre(this.nombre);
-            facultad.setSede(buscarSede(sede));
+            facultad.setSede(buscarSede(this.sede));
 
             boolean creacion = fachadaNegocio.agregarFacultad(facultad);
             if (creacion) {
@@ -150,28 +158,80 @@ public class AdminFacultadMB implements Serializable {
     public void abrirModificarFacultad(Facultad facultad) {
         this.nombre = facultad.getNombre();
         this.sede = facultad.getSede().getNombre();
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlModificarSede').show();");
+        this.facultadSeleccionada = facultad;
+        RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').show();");
     }
 
-    public void modificarFacultad(Facultad facultad) {
-        limpiarPantalla();
-        this.nombre = facultad.getNombre();
-        this.sede = facultad.getSede().getNombre(); // TODO
+    public void modificarFacultad() {
+        this.facultadSeleccionada.setNombre(this.nombre);
+        this.facultadSeleccionada.setSede(buscarSede(this.sede));
+        boolean modificarFacultad = fachadaNegocio.modificarFacultad(facultadSeleccionada);
+        if (modificarFacultad) {
+            notificarModificacionExitosa();
+            limpiarPantalla();
+            limpiarConsulta();
+        } else {
+            notificarModificacionFallida();
+        }
+        RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').hide();");
     }
 
-    public void cerrarModificarDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlModificarFacultad').hide();");
-    }
-
-    public void upload() {
-        if (file != null) {
-            FacesMessage message = new FacesMessage("Exitoso", file.getFileName() + " a sido cargado");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+    public void upload(FileUploadEvent event) {
+        UploadedFile file = event.getFile();
+        InputStream archivo;
+        try {
+            archivo = file.getInputstream();
+            cargarArchivo(archivo);
+        } catch (Exception e) {
+            System.out.println("Error leyendo archivo " + e);
         }
     }
 
+    public void cargarArchivo(InputStream fis) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+        String linea;
+        try {
+            while ((linea = br.readLine()) != null) {
+                try {
+                    cargarFacultad(linea);
+                } catch (Exception e) {
+                    System.out.println("Error leyendo linea " + e);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error leyendo linea mientras " + e);
+        }
+        notificarCargaArchivoExitosa();
+    }
+
+    public void cargarFacultad(String linea) {
+        String nombreFacultad = linea.substring(0, linea.indexOf("-"));
+        String sedeFacultad = linea.substring(linea.indexOf("-") + 1);
+        Facultad nuevaFacultad = new Facultad();
+        nuevaFacultad.setNombre(nombreFacultad);
+        nuevaFacultad.setSede(buscarSede(sedeFacultad));
+        if (validarFacultadArchivo(nuevaFacultad)) {
+            fachadaNegocio.agregarFacultad(nuevaFacultad);
+        }
+    }
+
+    public boolean validarFacultadArchivo(Facultad facultadNombre){
+        if(facultadNombre.getSede() != null){
+            if(validarFacultadNombre(facultadNombre)){
+                return true;                
+            }            
+        }    
+        return false;
+    }
+    
+    public boolean validarFacultadNombre(Facultad facultadNombre) {
+        Facultad facultad = fachadaNegocio.getFacultadPorNombre(facultadNombre.getNombre());
+        if (facultad != null) {
+            return false;
+        }
+        return true;
+    }
+    
     public void notificarCreacionExitosa() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Facultad Creada Exitosamente");
         Messages.addFlashGlobal(msg);
@@ -199,6 +259,21 @@ public class AdminFacultadMB implements Serializable {
 
     public void notificarEliminacionFallida() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando la Facultad");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarModificacionExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se modifica la Facultad Exitosamente");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarModificacionFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error al modificar la Facultad");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarCargaArchivoExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Archivo de Facultades Cargado Exitosamente.");
         Messages.addFlashGlobal(msg);
     }
 

@@ -3,7 +3,12 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Facultad;
+import com.proyectogrado.alternativahorario.entidades.Sede;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +16,12 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -251,13 +256,78 @@ public class AdminCarreraMB implements Serializable {
         context.execute("PF('pnlModificarCarrera').hide();");
     }
 
-    public void upload() {
-        if (file != null) {
-            FacesMessage message = new FacesMessage("Exitoso", file.getFileName() + " a sido cargado");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+    public void upload(FileUploadEvent event) {
+        UploadedFile file = event.getFile();
+        InputStream archivo;
+        try {
+            archivo = file.getInputstream();
+            cargarArchivo(archivo);
+        } catch (Exception e) {
+            System.out.println("Error leyendo archivo " + e);
         }
     }
-
+    
+    public void cargarArchivo(InputStream fis) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+        String linea;
+        try {
+            while ((linea = br.readLine()) != null) {
+                try {
+                    cargarCarrera(linea);
+                } catch (Exception e) {
+                    System.out.println("Error leyendo linea " + e);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error leyendo linea mientras " + e);
+        }        
+        notificarCargaArchivoExitosa();
+    }
+    
+    public void cargarCarrera(String linea) {
+        Carrera nuevaCarrera = creacionDeCarreraPorArchivo(linea);
+        if (validarCarreraArchivo(nuevaCarrera)) {
+            fachadaNegocio.agregarCarrera(nuevaCarrera);
+        }
+    }
+    
+    public Carrera creacionDeCarreraPorArchivo(String linea) {
+        try {
+            String nombre = linea.substring(0, linea.indexOf("-"));
+            String facultad = linea.substring(linea.indexOf("-") + 1, linea.indexOf("+"));
+            String plan = linea.substring(linea.indexOf("+") + 1, linea.indexOf("*"));
+            String snies = linea.substring(linea.indexOf("*") + 1, linea.indexOf("/"));
+            String creditos = linea.substring(linea.indexOf("/") + 1, linea.indexOf("!"));
+            String semestre = linea.substring(linea.indexOf("!") + 1, linea.indexOf("_"));
+            String materias = linea.substring(linea.indexOf("_") + 1, linea.indexOf("#"));
+            String descripcion = linea.substring(linea.indexOf("#") + 1);
+            Carrera nuevaCarrera = new Carrera();
+            nuevaCarrera.setNombre(nombre);
+            nuevaCarrera.setFacultad(buscarFacultad(facultad));
+            nuevaCarrera.setPlanEstudio(new BigInteger(plan));
+            nuevaCarrera.setSnies(snies);
+            nuevaCarrera.setCreditos(new BigInteger(creditos));
+            nuevaCarrera.setSemestres(new BigInteger(semestre));
+            nuevaCarrera.setMaterias(new BigInteger(materias));
+            nuevaCarrera.setDescripcion(descripcion);
+            return nuevaCarrera;
+        } catch (Exception e) {
+            System.out.println("Error creandola Carrera :");
+            System.out.println(""+e);
+            return null;
+        }
+    }
+    
+    public boolean validarCarreraArchivo(Carrera nuevaCarrera) {
+        if (nuevaCarrera != null) {
+            Carrera carreraBuscar = fachadaNegocio.getCarreraPorNombre(nuevaCarrera.getNombre());
+            if (carreraBuscar == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+        
     public void notificarEliminacionExitosa() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la/s Carrera/s Exitosamente");
         Messages.addFlashGlobal(msg);
@@ -285,6 +355,11 @@ public class AdminCarreraMB implements Serializable {
 
     public void notificarNoSeleccion() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ERROR", "No ha seleccionado carreras a Eliminar");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarCargaArchivoExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Archivo de Sedes Cargado Exitosamente.");
         Messages.addFlashGlobal(msg);
     }
 

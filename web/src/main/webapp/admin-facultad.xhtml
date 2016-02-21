@@ -46,11 +46,10 @@
                         </f:facet>
                     </p:dataTable>
                     <br />
-                    <p:fileUpload value="#{adminFacultad.file}" mode="simple" />
-                    <p:spacer width="30"/>
-                    <p:commandButton value="Subir" ajax="false" actionListener="#{adminFacultad.upload}" disabled="true" />
-                    
-                    <p:dialog header="Agregar Facultad" widgetVar="pnlAgregarFacultad" showEffect="explode" hideEffect="bounce">
+                    <p:fileUpload fileUploadListener="#{adminFacultad.upload}" mode="advanced" dragDropSupport="false"
+                                  update="tblFacultades" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
+      
+                    <p:dialog id="pnlAgregarFacultad" header="Agregar Facultad" widgetVar="pnlAgregarFacultad" dynamic="true" >
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 
                             <p:outputLabel for="txtNombre" value="Nombre :"  />
@@ -58,15 +57,29 @@
 
                             <p:outputLabel for="slcSede" value="Sede :" />
                             <p:selectOneMenu id="slcSede" value="#{adminFacultad.sede}" required="true">
-                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
                                 <f:selectItems value="#{adminFacultad.sedes}"/>
                             </p:selectOneMenu>
 
                         </h:panelGrid>
                         <br />
-                        <p:commandButton value="Agregar Facultad" actionListener="#{adminFacultad.agregarFacultad}" update="tblFacultades" />
+                        <p:commandButton value="Agregar Facultad" actionListener="#{adminFacultad.agregarFacultad}" update="tblFacultades"/>
                     </p:dialog>
+                             
+                    <p:dialog id="pnlModificarFacultad" header="Modificar Facultad" widgetVar="pnlModificarFacultad" dynamic="true" >
+                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 
+                            <p:outputLabel for="txtNombreMod" value="Nombre :"  />
+                            <p:inputText id="txtNombreMod" value="#{adminFacultad.nombre}" required="true" /> 
+
+                            <p:outputLabel for="slcSedeMod" value="Sede :" />
+                            <p:selectOneMenu id="slcSedeMod" value="#{adminFacultad.sede}" required="true">
+                                <f:selectItems value="#{adminFacultad.sedes}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <br />
+                        <p:commandButton value="Modificar Facultad" actionListener="#{adminFacultad.modificarFacultad}" update="tblFacultades"/>
+                    </p:dialog>
+                    
                 </h:form>
             </ui:define>
 

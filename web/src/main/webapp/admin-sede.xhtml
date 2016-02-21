@@ -45,10 +45,9 @@
                     </p:dataTable>
 
                     <br />
-                    <p:fileUpload value="#{adminSede.file}" mode="simple" />
-                    <p:spacer width="30"/>
-                    <p:commandButton value="Subir" actionListener="#{adminSede.upload}" />
-
+                    <p:fileUpload fileUploadListener="#{adminSede.upload}" mode="advanced" dragDropSupport="false"
+                                  update="tblSedes" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
+                    
                     <p:dialog id="pnlAgregarSede" header="Agregar Sede" widgetVar="pnlAgregarSede" showEffect="explode" hideEffect="bounce" dynamic="true" >
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 

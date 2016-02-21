@@ -2,6 +2,7 @@ package com.proyectogrado.alternativahorario.alternativahorario.negocio;
 
 import com.proyectogrado.alternativahorario.entidades.Sede;
 import com.proyectogrado.alternativahorario.persistencia.FachadaPersistenciaSedeLocal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -40,10 +41,15 @@ public class AdministracionSede implements AdministracionSedeLocal {
 
     @Override
     public List<Sede> eliminarSedes(List<Sede> sedes) {
+        List<Sede> sedesNoEliminadas = new ArrayList();
         for (Sede sede : sedes) {
-            eliminarSede(sede);
+            if (sede.getFacultadList().size() > 0) {
+                sedesNoEliminadas.add(sede);
+            } else {
+                eliminarSede(sede);
+            }
         }
-        return null;
+        return sedesNoEliminadas;
     }
 
     @Override
