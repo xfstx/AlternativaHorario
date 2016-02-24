@@ -87,7 +87,7 @@
                             <p:commandButton id="btonAgregar" value="Agregar Carrera" icon="fa-plus-square" onclick="PF('pnlAgregarCarrera').show();"/>                            
                         </f:facet>
 
-                    </p:dataTable>
+                    </p:dataTable>                    
 
                     <br />
                     <p:fileUpload fileUploadListener="#{adminCarrera.upload}" mode="advanced" dragDropSupport="false"
@@ -133,7 +133,9 @@
                         <br />
                         <p:commandButton value="Agregar Carrera" actionListener="#{adminCarrera.agregarCarrera}" update="tblCarreras"/>
                     </p:dialog>
-
+                    
+                   
+                    
                 </h:form>
             </ui:define>            
         </ui:composition>

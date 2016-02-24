@@ -3,12 +3,10 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Facultad;
-import com.proyectogrado.alternativahorario.entidades.Sede;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +115,10 @@ public class AdminCarreraMB implements Serializable {
     @Setter
     private String modDescripcion;
 
+    @Getter
+    @Setter
+    private Carrera carreraSeleccionada;
+    
     @Getter
     @Setter
     private UploadedFile file;
@@ -234,9 +236,7 @@ public class AdminCarreraMB implements Serializable {
     }
 
     public void abrirModificarCarrera(Carrera carrera) {
-        System.out.println("abrirModificarCarrera ");
-        System.out.println("-< Modificar " + carrera.getNombre() + " - " + carrera.getDescripcion());
-        limpiarModificacion();
+        this.carreraSeleccionada = carrera;
         this.modNombre = carrera.getNombre();
         this.modFacultad = carrera.getFacultad().getNombre();
         this.modPlanEstudios = carrera.getPlanEstudio() + "";
@@ -246,14 +246,12 @@ public class AdminCarreraMB implements Serializable {
         this.modMaterias = carrera.getMaterias().intValue();
         this.modDescripcion = carrera.getDescripcion();
         RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarCarrera').show();");
+        context.execute("PF('pnlModificarCarrera').show();");
     }
 
     public void modificarCarrera() {
-        limpiarModificacion();
-        System.out.println("Modificar Materia");
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlModificarCarrera').hide();");
+
+        RequestContext.getCurrentInstance().execute("PF('pnlModificarCarrera').hide();");
     }
 
     public void upload(FileUploadEvent event) {
