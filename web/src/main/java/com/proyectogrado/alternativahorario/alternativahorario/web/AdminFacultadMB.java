@@ -67,9 +67,20 @@ public class AdminFacultadMB implements Serializable {
     @Setter
     private UploadedFile file;
 
+    @Getter
+    @Setter
+    private boolean esAgregarVisible;
+    
+    @Getter
+    @Setter
+    private boolean esModificarVisible;
+    
+    
     @PostConstruct
     public void init() {
         this.sedes = new ArrayList();
+        this.esAgregarVisible = false;
+        this.esModificarVisible = false;
         limpiarConsulta();
         llenarSedes();
     }
@@ -119,6 +130,11 @@ public class AdminFacultadMB implements Serializable {
         this.sede = "";
     }
 
+    public void abrirAgregarFacultad(){
+        this.esAgregarVisible = true;
+        RequestContext.getCurrentInstance().execute("PF('wAgregarFacultad').show();");
+    }
+    
     public void agregarFacultad() {
         if (validarFacultad()) {
             Facultad facultad = new Facultad();
@@ -151,15 +167,17 @@ public class AdminFacultadMB implements Serializable {
     }
 
     public void cerrarCrearDialog() {
+        this.esAgregarVisible = false;
         RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarFacultad').hide();");
+        context.execute("PF('wAgregarFacultad').hide();");
     }
 
     public void abrirModificarFacultad(Facultad facultad) {
         this.nombre = facultad.getNombre();
         this.sede = facultad.getSede().getNombre();
         this.facultadSeleccionada = facultad;
-        RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').show();");
+        this.esModificarVisible = true;
+        RequestContext.getCurrentInstance().execute("PF('wModificarFacultad').show();");
     }
 
     public void modificarFacultad() {
@@ -173,6 +191,7 @@ public class AdminFacultadMB implements Serializable {
         } else {
             notificarModificacionFallida();
         }
+        this.esModificarVisible = false;
         RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').hide();");
     }
 

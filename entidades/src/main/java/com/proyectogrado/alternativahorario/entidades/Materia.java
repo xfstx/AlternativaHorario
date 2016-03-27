@@ -23,7 +23,7 @@ import lombok.Setter;
 /**
  *
  * @author Steven
- */ // Materia.findByCarreraSemestre
+ */ 
 @Entity
 @Table(name = "materias")
 @SequenceGenerator(name = "SecuenciaMaterias", sequenceName = "SEC_IDMATERIAS")

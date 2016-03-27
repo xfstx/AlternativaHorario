@@ -13,6 +13,7 @@
     <class>com.proyectogrado.alternativahorario.entidades.Menu</class>
     <class>com.proyectogrado.alternativahorario.entidades.Sede_1</class>
     <class>com.proyectogrado.alternativahorario.entidades.Facultad_1</class>
+    <class>com.proyectogrado.alternativahorario.entidades.Requisito</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>

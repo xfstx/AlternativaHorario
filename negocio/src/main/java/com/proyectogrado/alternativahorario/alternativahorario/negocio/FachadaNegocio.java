@@ -234,6 +234,11 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     }
 
     @Override
+    public List<Horario> getHorariosPorClase(Clase clase){
+        return administracionHorario.getHorariosPorClase(clase);
+    }    
+    
+    @Override
     public boolean eliminarHorario(Horario horario) {
         return administracionHorario.eliminarHorario(horario);
     }

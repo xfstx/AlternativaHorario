@@ -54,9 +54,8 @@ public class Clase implements Serializable {
 
     @Getter
     @Setter
-    @JoinColumn(name = "profesor", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Profesor profesor;
+    @Column(name = "profesor")
+    private String profesor;
 
     public Clase() {
     }

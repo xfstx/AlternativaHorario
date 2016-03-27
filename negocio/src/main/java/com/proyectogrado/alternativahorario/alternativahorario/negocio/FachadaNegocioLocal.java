@@ -94,6 +94,8 @@ public interface FachadaNegocioLocal {
 
     List<Clase> getClasesPorMateria(Materia materia);
 
+    List<Horario> getHorariosPorClase(Clase clase);
+            
     boolean eliminarHorario(Horario horario);
 
     List<Horario> eliminarHorarios(List<Horario> horarios);

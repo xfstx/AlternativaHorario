@@ -2,6 +2,7 @@ package com.proyectogrado.alternativahorario.alternativahorario.web;
 
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
 import com.proyectogrado.alternativahorario.entidades.Carrera;
+import com.proyectogrado.alternativahorario.entidades.Clase;
 import com.proyectogrado.alternativahorario.entidades.Horario;
 import com.proyectogrado.alternativahorario.entidades.Materia;
 import java.io.Serializable;
@@ -17,6 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
+import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
 
@@ -29,7 +31,7 @@ import org.primefaces.model.UploadedFile;
 public class AdminClaseMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
@@ -55,14 +57,6 @@ public class AdminClaseMB implements Serializable {
 
     @Getter
     @Setter
-    private List<Horario> horarios;
-
-    @Getter
-    @Setter
-    private List<Horario> horariosSeleccionados;
-
-    @Getter
-    @Setter
     private List<String> carreras;
 
     @Getter
@@ -83,7 +77,23 @@ public class AdminClaseMB implements Serializable {
 
     @Getter
     @Setter
-    private List<Materia> materiasSeleccionadas;
+    private Materia materiaSeleccionada;
+
+    @Getter
+    @Setter
+    private List<Clase> clases;
+
+    @Getter
+    @Setter
+    private Clase claseSeleccionada;
+
+    @Getter
+    @Setter
+    private List<Horario> horarios;
+
+    @Getter
+    @Setter
+    private Horario horarioSeleccionado;
 
     @Getter
     @Setter
@@ -92,6 +102,7 @@ public class AdminClaseMB implements Serializable {
     @PostConstruct
     public void init() {
         this.materias = new ArrayList();
+        this.clases = new ArrayList();
         this.dias = new ArrayList();
         this.horarios = new ArrayList();
         this.carreras = new ArrayList();
@@ -125,6 +136,27 @@ public class AdminClaseMB implements Serializable {
         this.dias.add("Sabado");
     }
 
+    public void cargarClases() {
+        this.clases = fachadaNegocio.getClasesPorMateria(materiaSeleccionada);
+    }
+
+    public void agregarClase() {
+        System.out.println("IMpsfd ");
+    }
+
+    public void eliminarClase() {
+        boolean eliminar = fachadaNegocio.eliminarClase(claseSeleccionada);
+        if (eliminar) {
+            notificarEliminacionClaseExitosa();
+        } else {
+            notificarEliminacionClaseFallida();
+        }
+    }
+    
+    public void cargarHorarios() {
+        this.horarios = fachadaNegocio.getHorariosPorClase(claseSeleccionada);
+    }
+
     public void agregarHorario() {
         Horario hor = new Horario();
         hor.setDia(this.dia);
@@ -135,13 +167,12 @@ public class AdminClaseMB implements Serializable {
     }
 
     public void eliminarHorarios() {
-        for (Horario horarioElim : horariosSeleccionados) {
-            horarios.remove(horarioElim);
+        boolean eliminar = fachadaNegocio.eliminarHorario(horarioSeleccionado);
+        if (eliminar) {
+            notificarEliminacionHorarioExitosa();
+        } else {
+            notificarEliminacionHorarioFallida();
         }
-    }
-
-    public void agregarClase() {
-        System.out.println("IMpsfd ");
     }
 
     public void cerrarCrearDialog() {
@@ -161,4 +192,24 @@ public class AdminClaseMB implements Serializable {
         }
     }
 
+    public void notificarEliminacionClaseExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la Clase Exitosamente");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarEliminacionClaseFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando la Clase");
+        Messages.addFlashGlobal(msg);
+    }
+    
+    public void notificarEliminacionHorarioExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino el Horario Exitosamente");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarEliminacionHorarioFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando el Horario");
+        Messages.addFlashGlobal(msg);
+    }
+    
 }

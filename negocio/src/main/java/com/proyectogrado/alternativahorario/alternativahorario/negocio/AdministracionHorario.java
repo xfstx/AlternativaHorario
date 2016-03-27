@@ -1,5 +1,6 @@
 package com.proyectogrado.alternativahorario.alternativahorario.negocio;
 
+import com.proyectogrado.alternativahorario.entidades.Clase;
 import com.proyectogrado.alternativahorario.entidades.Horario;
 import com.proyectogrado.alternativahorario.persistencia.FachadaPersistenciaHorarioLocal;
 import java.util.List;
@@ -21,6 +22,11 @@ public class AdministracionHorario implements AdministracionHorarioLocal {
         return fachadaPersistenciaHorario.findAll();
     }
 
+    @Override
+    public List<Horario> getHorariosPorClase(Clase clase){
+        return fachadaPersistenciaHorario.findByClase(clase);
+    }
+    
     @Override
     public boolean eliminarHorario(Horario horario) {
         try {

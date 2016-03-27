@@ -162,12 +162,12 @@ public class AdminSedeMB implements Serializable {
         this.sedeSeleccionada.setDireccion(this.direccion);
         boolean modificarSede = fachadaNegocio.modificarSede(sedeSeleccionada);
         if (modificarSede) {
-            notificarModificacionExitosa();
-            limpiarPantalla();
+            notificarModificacionExitosa();            
             limpiarConsulta();
         } else {
             notificarModificacionFallida();
         }
+        limpiarPantalla();
         RequestContext.getCurrentInstance().execute("PF('pnlModificarSede').hide();");
     }
 

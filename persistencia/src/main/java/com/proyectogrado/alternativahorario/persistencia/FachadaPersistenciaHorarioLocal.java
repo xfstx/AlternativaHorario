@@ -1,6 +1,7 @@
 
 package com.proyectogrado.alternativahorario.persistencia;
 
+import com.proyectogrado.alternativahorario.entidades.Clase;
 import com.proyectogrado.alternativahorario.entidades.Horario;
 import java.util.List;
 import javax.ejb.Local;
@@ -26,4 +27,6 @@ public interface FachadaPersistenciaHorarioLocal {
 
     int count();
         
+    List<Horario> findByClase(Clase clase);
+    
 }
