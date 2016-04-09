@@ -30,7 +30,7 @@
         <!-- Dependencies -->
         <dependencies.javaee.version>7.0</dependencies.javaee.version>
         <dependencies.eclipselink.version>2.5.2</dependencies.eclipselink.version>
-        <dependencies.primefaces.version>5.1</dependencies.primefaces.version>
+        <dependencies.primefaces.version>5.3</dependencies.primefaces.version>
         <dependencies.omnifaces.version>1.8.1</dependencies.omnifaces.version>
         <!-- Plugins -->
         <dependencies.plugin.compiler.version>3.2</dependencies.plugin.compiler.version>

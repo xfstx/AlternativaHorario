@@ -20,6 +20,8 @@ public interface AdministracionClaseLocal {
 
     boolean agregarClase(Clase clase);
 
+    boolean modificarClase(Clase clase);
+    
     List<Clase> getClasesPorMateria(Materia materia);
 
 }

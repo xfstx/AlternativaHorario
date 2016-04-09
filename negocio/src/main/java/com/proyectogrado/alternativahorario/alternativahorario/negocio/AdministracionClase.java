@@ -54,6 +54,17 @@ public class AdministracionClase implements AdministracionClaseLocal {
     }
 
     @Override
+    public boolean modificarClase(Clase clase) {
+        try {
+            fachadaPersistenciaClase.edit(clase);
+        } catch (Exception e) {
+            System.out.println("Ocurrio un error modificacion la clase " + clase);
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
     public List<Clase> getClasesPorMateria(Materia materia) {        
         return fachadaPersistenciaClase.findByMateria(materia);
     }

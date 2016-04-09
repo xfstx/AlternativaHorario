@@ -92,6 +92,8 @@ public interface FachadaNegocioLocal {
 
     boolean agregarClase(Clase clase);
 
+    boolean modificarClase(Clase clase);
+    
     List<Clase> getClasesPorMateria(Materia materia);
 
     List<Horario> getHorariosPorClase(Clase clase);

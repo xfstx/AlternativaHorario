@@ -227,6 +227,11 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     public boolean agregarClase(Clase clase) {
         return administracionClase.agregarClase(clase);
     }
+    
+    @Override
+    public boolean modificarClase(Clase clase){
+        return administracionClase.modificarClase(clase);
+    }
 
     @Override
     public List<Clase> getClasesPorMateria(Materia materia) {

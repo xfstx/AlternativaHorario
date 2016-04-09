@@ -14,7 +14,7 @@
                     <h1>Administracion Clase</h1>
                     <p:outputLabel id="txtSelectMateria" value="Seleccione Materia:"  /><br />
                     <p:dataTable id="tblMaterias" var="materia" value="#{adminClase.materias}" selection="#{adminClase.materiaSeleccionada}" 
-                                 selectionMode="single" widgetVar="tblMateria" 
+                                 selectionMode="single" widgetVar="tblMateria" scrollHeight="100px"
                                  emptyMessage="No se encuentran materias con este criterio" scrollable="true"
                                  rowKey="#{materia.id}" style="margin-bottom:0" resizableColumns="true">
                         <p:ajax event="rowSelect" listener="#{adminClase.cargarClases}" update=":#{p:component('formAdminClase')}" />
@@ -71,7 +71,7 @@
                             <p:spacer width="30"/>
                             <p:commandButton id="btonEliminarClase" value="Eliminar Clase" icon="ui-icon-closethick" actionListener="#{adminClase.eliminarClase}" update="tblClases"/>                            
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregarClase" value="Agregar Clase" icon="ui-icon-plus" onclick="PF('pnlAgregarHorario').show();" />
+                            <p:commandButton id="btonAgregarClase" value="Agregar Clase" icon="ui-icon-plus" type="button" onclick="PF('pnlAddClass').show();" disabled="#{adminClase.materiaSeleccionada == null}"/>
                         </f:facet>                        
                     </p:dataTable>
 
@@ -95,13 +95,12 @@
                             <p:spacer width="30"/>
                             <p:commandButton id="btonEliminarHorario" value="Eliminar Horario" icon="ui-icon-closethick" actionListener="#{adminClase.eliminarHorarios}" update="tblHorario"/>                            
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregarHorario" value="Agregar Horario" icon="ui-icon-plus" onclick="PF('pnlAgregarHorario').show();" />
+                            <p:commandButton id="btonAgregarHorario" value="Agregar Horario" type="button" icon="ui-icon-plus" onclick="PF('pnlAgregarHorario').show();" disabled="#{adminClase.claseSeleccionada == null}" />
                         </f:facet>
                     </p:dataTable>
                     <br />
-                    <p:commandButton value="Agregar Clase" actionListener="#{adminClase.agregarClase}" update="@form"/>
 
-                    <p:dialog header="Agregar Horario" widgetVar="pnlAgregarHorario" showEffect="explode" hideEffect="bounce">
+                    <p:dialog id="pnlAgregarHorario" header="Agregar Horario" widgetVar="pnlAgregarHorario" resizable="false" dynamic="true">
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
                             <p:outputLabel for="slcDia" value="Dia : " />
                             <p:selectOneMenu id="slcDia" value="#{adminClase.dia}" required="true">
@@ -116,7 +115,18 @@
                         <br />
                         <p:commandButton value="Agregar Horario" actionListener="#{adminClase.agregarHorario}" update="tblHorario"/>
                     </p:dialog>
-
+                    
+                    <p:dialog header="Agregar Clase" widgetVar="pnlAddClass" >
+                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+                            <p:outputLabel for="txtGrupo" value="Grupo : " />
+                            <p:inputText id="txtGrupo" value="#{adminClase.grupo}" required="true" />
+                            <p:outputLabel for="txtProfesor" value="Profesor : " />
+                            <p:inputText id="txtProfesor" value="#{adminClase.profesor}" required="true" />                            
+                        </h:panelGrid>
+                        <br />
+                        <p:commandButton value="Agregar Clase" actionListener="#{adminClase.prueba}" />
+                    </p:dialog>
+                    
                 </h:form>                
             </ui:define>
         </ui:composition>

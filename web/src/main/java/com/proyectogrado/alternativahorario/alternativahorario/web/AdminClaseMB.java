@@ -45,6 +45,10 @@ public class AdminClaseMB implements Serializable {
 
     @Getter
     @Setter
+    private String profesor;
+    
+    @Getter
+    @Setter
     private String dia;
 
     @Getter
@@ -98,7 +102,7 @@ public class AdminClaseMB implements Serializable {
     @Getter
     @Setter
     private int cantidadMaterias;
-
+    
     @PostConstruct
     public void init() {
         this.materias = new ArrayList();
@@ -112,6 +116,8 @@ public class AdminClaseMB implements Serializable {
     }
 
     public void limpiarPantalla() {
+        this.profesor = "";
+        this.grupo = "";
         this.materias = fachadaNegocio.getMaterias();
         this.cantidadMaterias = materias.size();
     }
@@ -123,6 +129,10 @@ public class AdminClaseMB implements Serializable {
         }
     }
 
+    public void prueba(){
+        System.out.println("This is a test");
+    }
+    
     public Carrera buscarCarrera(String nombreCarrera) {
         return fachadaNegocio.getCarreraPorNombre(nombreCarrera);
     }
@@ -139,11 +149,29 @@ public class AdminClaseMB implements Serializable {
     public void cargarClases() {
         this.clases = fachadaNegocio.getClasesPorMateria(materiaSeleccionada);
     }
-
+    
     public void agregarClase() {
-        System.out.println("IMpsfd ");
+        Clase nuevaClase = new Clase();
+        nuevaClase.setMateria(this.materiaSeleccionada);
+        nuevaClase.setGrupo(this.grupo);
+        nuevaClase.setProfesor(this.profesor);
+        nuevaClase.setHorarioList(new ArrayList());
+        this.materiaSeleccionada.getClaseList().add(nuevaClase);
+        boolean modificar = fachadaNegocio.modificarMateria(this.materiaSeleccionada);
+        if (modificar) {
+            notificarAgregarClaseExitosa();
+            limpiarPantalla();            
+        } else {
+            notificarAgregarClaseFallida();
+        }
+        cerrarCrearDialogAgregarClase();
     }
 
+    public void cerrarCrearDialogAgregarClase() {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('pnlAddClass').hide();");
+    }
+    
     public void eliminarClase() {
         boolean eliminar = fachadaNegocio.eliminarClase(claseSeleccionada);
         if (eliminar) {
@@ -156,14 +184,21 @@ public class AdminClaseMB implements Serializable {
     public void cargarHorarios() {
         this.horarios = fachadaNegocio.getHorariosPorClase(claseSeleccionada);
     }
-
+    
     public void agregarHorario() {
-        Horario hor = new Horario();
-        hor.setDia(this.dia);
-        hor.setHorainicio(this.horaInicio);
-        hor.setHorafin(this.horaFin);
-        horarios.add(hor);
-        cerrarCrearDialog();
+        Horario nuevoHorario = new Horario();
+        nuevoHorario.setDia(this.dia);
+        nuevoHorario.setHorainicio(this.horaInicio);
+        nuevoHorario.setHorafin(this.horaFin);
+        nuevoHorario.setClases(this.claseSeleccionada);
+        this.claseSeleccionada.getHorarioList().add(nuevoHorario);
+        boolean modificar = fachadaNegocio.modificarClase(claseSeleccionada);
+        if (modificar) {
+            notificarAgregarHorarioExitosa();
+        } else {
+            notificarAgregarHorarioFallida();
+        }
+        cerrarCrearDialogAgregarHorario();
     }
 
     public void eliminarHorarios() {
@@ -175,7 +210,7 @@ public class AdminClaseMB implements Serializable {
         }
     }
 
-    public void cerrarCrearDialog() {
+    public void cerrarCrearDialogAgregarHorario() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('pnlAgregarHorario').hide();");
     }
@@ -211,5 +246,25 @@ public class AdminClaseMB implements Serializable {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando el Horario");
         Messages.addFlashGlobal(msg);
     }
-    
+
+    public void notificarAgregarClaseExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se agrego la clase Exitosamente");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarAgregarClaseFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error agregando la clase");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarAgregarHorarioExitosa() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se agrego el horario Exitosamente");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarAgregarHorarioFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error agregando el horario");
+        Messages.addFlashGlobal(msg);
+    }
+ 
 }
