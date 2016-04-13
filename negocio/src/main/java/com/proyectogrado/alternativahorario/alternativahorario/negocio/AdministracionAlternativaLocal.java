@@ -1,5 +1,7 @@
 package com.proyectogrado.alternativahorario.alternativahorario.negocio;
 
+import com.proyectogrado.alternativahorario.entidades.Materia;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -8,5 +10,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface AdministracionAlternativaLocal {
+    
+    List<Cromosoma> ejecutarAlgoritmoGenetico(List<Materia> materiasSeleccionadas);
     
 }

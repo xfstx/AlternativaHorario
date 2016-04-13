@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import org.apache.commons.lang3.Range;
 
 /**
  *
@@ -37,6 +38,7 @@ public class AdministracionAlternativa implements AdministracionAlternativaLocal
     private Random random;
     
     // Metodo Inicial !!!
+    @Override
     public List<Cromosoma> ejecutarAlgoritmoGenetico(List<Materia> materiasSeleccionadas) {
         this.materiasSeleccionadas = materiasSeleccionadas;
         crearRandom();        
@@ -129,14 +131,31 @@ public class AdministracionAlternativa implements AdministracionAlternativaLocal
     }
     
     public int compararHorasCruzadas(Horario horarioBase, Cromosoma clases){
+        int horasCruzadas = 0;
         for (Clase clase : clases.getClases()) {
-            for (Horario hora : clase.getHorarioList()) {
-                //horarioBase.
-            }            
+            for (Horario horaCalculo : clase.getHorarioList()) {
+                horasCruzadas =+ calculoDeRangosHorasCruzadas(horarioBase, horaCalculo);
+            }
         }
-        return 0;
+        return horasCruzadas;
     }
 
+    public int calculoDeRangosHorasCruzadas(Horario horarioA, Horario horarioB){
+        Range horarA = Range.between(horarioA.getHorainicio(), horarioA.getHorafin());
+        Range horarB = Range.between(horarioB.getHorainicio(), horarioB.getHorafin());
+        Range intersect = null;
+        Integer minimo = null;
+        Integer maximo = 0;
+        try {
+            intersect = horarA.intersectionWith(horarB);
+            minimo = (Integer) intersect.getMinimum();
+            maximo = (Integer) intersect.getMaximum();
+            maximo = maximo - minimo;
+        } catch (Exception e) {
+        }
+        return maximo;
+    }
+    
     public int calcularCantidadHorasEspera(Cromosoma horario) {
         return 0;
     }

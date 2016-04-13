@@ -6,6 +6,7 @@ import com.proyectogrado.alternativahorario.entidades.Clase;
 import com.proyectogrado.alternativahorario.entidades.Horario;
 import com.proyectogrado.alternativahorario.entidades.Materia;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,11 +54,11 @@ public class AdminClaseMB implements Serializable {
 
     @Getter
     @Setter
-    private Date horaInicio;
+    private BigDecimal horaInicio;
 
     @Getter
     @Setter
-    private Date horaFin;
+    private BigDecimal horaFin;
 
     @Getter
     @Setter

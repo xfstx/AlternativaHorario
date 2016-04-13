@@ -45,14 +45,12 @@ public class Horario implements Serializable {
     @Getter
     @Setter
     @Column(name = "horainicio")
-    @Temporal(TemporalType.TIME)
-    private Date horainicio;
+    private BigDecimal horainicio;
     
     @Getter
     @Setter
     @Column(name = "horafin")
-    @Temporal(TemporalType.TIME)
-    private Date horafin;
+    private BigDecimal horafin;
     
     @Getter
     @Setter
