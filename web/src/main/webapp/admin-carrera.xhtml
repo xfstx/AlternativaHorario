@@ -32,6 +32,10 @@
                             <h:outputText value="#{carrera.facultad.nombre}" />
                         </p:column>
 
+                        <p:column headerText="Descripcion" width="350">
+                            <h:outputText value="#{carrera.descripcion}" />
+                        </p:column>
+                        
                         <p:column headerText="Plan Estudios" style="width:120px;">
                             <h:outputText value="#{carrera.planEstudio}" />
                         </p:column>
@@ -40,12 +44,7 @@
                             <h:outputText value="#{carrera.snies}" />
                         </p:column>
 
-                        <p:column headerText="Creditos" sortBy="#{carrera.creditos}" filterBy="#{carrera.creditos}" style="width:250px;">
-                            <f:facet name="filter">
-                                <p:spinner onchange="PF('tblCarreras').filter()" min="0">
-                                    <f:converter converterId="javax.faces.Integer" />
-                                </p:spinner>
-                            </f:facet>
+                        <p:column headerText="Creditos" sortBy="#{carrera.creditos}" style="width:250px;">
                             <h:outputText value="#{carrera.creditos}" />
                         </p:column>
 
@@ -58,17 +57,8 @@
                             <h:outputText value="#{carrera.semestres}" />
                         </p:column>
 
-                        <p:column headerText="Materias" sortBy="#{carrera.materias}" filterBy="#{carrera.materias}" style="width:250px;">
-                            <f:facet name="filter">
-                                <p:spinner onchange="PF('tblCarreras').filter()" min="0">
-                                    <f:converter converterId="javax.faces.Integer" />
-                                </p:spinner>
-                            </f:facet>
+                        <p:column headerText="Materias" sortBy="#{carrera.materias}" style="width:250px;">
                             <h:outputText value="#{carrera.materias}" />
-                        </p:column>
-
-                        <p:column headerText="Descripcion">
-                            <h:outputText value="#{carrera.descripcion}" />
                         </p:column>
 
                         <p:column style="width:40px; text-align:center;">

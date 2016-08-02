@@ -68,5 +68,10 @@ public class AdministracionClase implements AdministracionClaseLocal {
     public List<Clase> getClasesPorMateria(Materia materia) {        
         return fachadaPersistenciaClase.findByMateria(materia);
     }
+    
+    @Override
+    public Clase getClasePorMateriaGrupo(Materia materia, String grupo){
+        return fachadaPersistenciaClase.findByMateriaGrupo(materia, grupo);
+    }
 
 }

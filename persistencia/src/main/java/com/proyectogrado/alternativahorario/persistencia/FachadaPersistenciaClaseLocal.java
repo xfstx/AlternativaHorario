@@ -29,4 +29,6 @@ public interface FachadaPersistenciaClaseLocal {
         
     List<Clase> findByMateria(Materia materia);
     
+    Clase findByMateriaGrupo(Materia materia, String grupo);
+    
 }

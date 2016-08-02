@@ -2,6 +2,7 @@ package com.proyectogrado.alternativahorario.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -74,10 +75,12 @@ public class Materia implements Serializable {
     private Carrera carrera;
 
     public Materia() {
+        claseList = new ArrayList();
     }
 
     public Materia(BigDecimal id) {
         this.id = id;
+        claseList = new ArrayList();
     }
 
 }

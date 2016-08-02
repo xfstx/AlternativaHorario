@@ -5,12 +5,16 @@ import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Clase;
 import com.proyectogrado.alternativahorario.entidades.Horario;
 import com.proyectogrado.alternativahorario.entidades.Materia;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -21,6 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -104,6 +109,10 @@ public class AdminClaseMB implements Serializable {
     @Setter
     private int cantidadMaterias;
     
+    @Getter
+    @Setter
+    private String errorLineas;
+    
     @PostConstruct
     public void init() {
         this.materias = new ArrayList();
@@ -121,6 +130,7 @@ public class AdminClaseMB implements Serializable {
         this.grupo = "";
         this.materias = fachadaNegocio.getMaterias();
         this.cantidadMaterias = materias.size();
+        this.errorLineas = "";
     }
 
     public void llenarCarreras() {
@@ -221,11 +231,90 @@ public class AdminClaseMB implements Serializable {
         return sdf.format(fecha);
     }
 
-    public void upload() {
-        if (file != null) {
-            FacesMessage message = new FacesMessage("Exitoso", file.getFileName() + " a sido cargado");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+    public void upload(FileUploadEvent event) {
+        UploadedFile file = event.getFile();
+        InputStream archivo;
+        try {
+            archivo = file.getInputstream();
+            cargarArchivo(archivo);
+        } catch (Exception e) {
+            System.out.println("Error leyendo archivo " + e);
         }
+    }
+
+    public void cargarArchivo(InputStream fis) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+        String linea;
+        int numeroLinea = 0;
+        try {
+            while ((linea = br.readLine()) != null) {
+                numeroLinea++;
+                try {
+                    cargarClase(linea, numeroLinea);
+                } catch (Exception e) {
+                    System.out.println("Error leyendo linea " + e);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error leyendo linea mientras " + e);
+        }
+        reportarErrorLeyendoArchivo();
+    }
+
+    public void reportarErrorLeyendoArchivo() {
+        if (!errorLineas.isEmpty()) {
+            notificarErrorLineasArchivo(errorLineas);
+        }
+    }
+
+    public void cargarClase(String linea, int numeroLinea) {
+        try {
+            String mate = linea.substring(0, linea.indexOf("-"));
+            String carr = linea.substring(linea.indexOf("-") + 1, linea.indexOf("+"));
+            String grupo = linea.substring(linea.indexOf("+") + 1, linea.indexOf("*"));
+            String dia = linea.substring(linea.indexOf("*") + 1, linea.indexOf("/"));
+            int horaIn = Integer.parseInt(linea.substring(linea.indexOf("/") + 1, linea.indexOf("_")));
+            int horaFi = Integer.parseInt(linea.substring(linea.indexOf("_") + 1, linea.indexOf(",")));
+            String profe = linea.substring(linea.indexOf(",") + 1);
+            
+            Materia mater = fachadaNegocio.getMateriaPorNombre(mate);
+            Clase clase = fachadaNegocio.getClasePorMateriaGrupo(mater, grupo);
+            
+            Horario nuevoHorario = new Horario();
+            nuevoHorario.setClases(clase);
+            nuevoHorario.setDia(dia);
+            nuevoHorario.setHorafin(new BigDecimal(horaFi));
+            nuevoHorario.setHorainicio(new BigDecimal(horaIn));
+            
+            if (Objects.isNull(clase)) {
+                clase = new Clase();
+                clase.setGrupo(grupo);
+                clase.setMateria(mater);
+                clase.setProfesor(profe);
+                List<Horario> hora = new ArrayList();
+                hora.add(nuevoHorario);
+                clase.setHorarioList(hora);
+                boolean creacion = fachadaNegocio.agregarClase(clase);
+            } else {
+                clase.getHorarioList().add(nuevoHorario);
+                boolean modificar = fachadaNegocio.modificarClase(clase);
+            }            
+
+        } catch (Exception e) {
+            errorLineas += "Error en la linea " + numeroLinea + " <br/>";
+        }
+    }
+
+    public boolean existeClase(String nombreMateria) {
+        Materia materia = fachadaNegocio.getMateriaPorNombre(nombreMateria);
+        if (materia.getClaseList().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+    
+    public Materia buscarMateria(String nombreMateria){
+        return fachadaNegocio.getMateriaPorNombre(nombreMateria);
     }
 
     public void notificarEliminacionClaseExitosa() {
@@ -267,5 +356,11 @@ public class AdminClaseMB implements Serializable {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error agregando el horario");
         Messages.addFlashGlobal(msg);
     }
- 
+    
+    public void notificarErrorLineasArchivo(String error) {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", error);
+        Messages.addFlashGlobal(msg);
+        this.errorLineas = "";
+    }
+    
 }

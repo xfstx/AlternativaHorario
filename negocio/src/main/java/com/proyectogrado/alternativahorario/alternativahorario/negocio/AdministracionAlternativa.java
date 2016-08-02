@@ -6,6 +6,7 @@ import com.proyectogrado.alternativahorario.entidades.Materia;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -157,8 +158,52 @@ public class AdministracionAlternativa implements AdministracionAlternativaLocal
     }
     
     public int calcularCantidadHorasEspera(Cromosoma horario) {
-        return 0;
+        int horasDeCruce = 0;
+        for (Clase clase : horario.getClases()) {
+            for (Horario hora : clase.getHorarioList()) {
+               horasDeCruce =+ compararHorasEspera(hora, horario);
+            }
+        }
+        return horasDeCruce;
     }
+    
+    public int compararHorasEspera(Horario horarioBase, Cromosoma clases){
+        int horasCruzadas = 0;
+        for (Clase clase : clases.getClases()) {
+            for (Horario horaCalculo : clase.getHorarioList()) {
+                horasCruzadas =+ calculoDeRangosHorasDeEspera(horarioBase, horaCalculo);
+            }
+        }
+        return horasCruzadas;
+    }
+    
+    public int calculoDeRangosHorasDeEspera(Horario horarioA, Horario horarioB){
+        int calculo = 0;
+        if (horarioA.getDia().equals(horarioB.getDia())) {
+            Range horarA = Range.between(horarioA.getHorainicio(), horarioA.getHorafin());
+            Range horarB = Range.between(horarioB.getHorainicio(), horarioB.getHorafin());
+            Range intersect = null;
+            try {
+                intersect = horarA.intersectionWith(horarB);
+            } catch (Exception e) {
+            }
+            if (Objects.isNull(intersect)) {
+                if (horarA.isAfterRange(horarB)) {
+                    calculo = calcularDiferenciaHorasEntreHorarios(horarB, horarA);
+                } else {
+                    calculo = calcularDiferenciaHorasEntreHorarios(horarA, horarB);
+                }
+            }
+        }
+        return calculo;
+    }
+    
+    public int calcularDiferenciaHorasEntreHorarios(Range horarioA, Range horarioB){
+        int horaFinalHorarioA = (int) horarioA.getMaximum();
+        int horaInicialHorarioB = (int) horarioB.getMinimum();
+        return horaInicialHorarioB - horaFinalHorarioA;
+    }
+    
     
     public void ordenarPoblacion() {
         Collections.sort(poblacion, (Cromosoma o1, Cromosoma o2) -> {

@@ -23,5 +23,7 @@ public interface AdministracionClaseLocal {
     boolean modificarClase(Clase clase);
     
     List<Clase> getClasesPorMateria(Materia materia);
+    
+    Clase getClasePorMateriaGrupo(Materia materia, String grupo);
 
 }

@@ -39,5 +39,18 @@ public class FachadaPersistenciaClase extends AbstractFacade<Clase> implements F
         }
         return clases;
     }
+    
+    @Override
+    public Clase findByMateriaGrupo(Materia materia, String grupo) {
+        Clase clase = null;
+        try {
+            Query query = getEntityManager().createNamedQuery("Clase.findByMateria");
+            query.setParameter("materia", materia);
+            clase = (Clase) query.getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Error buscando Clase por materia " + materia.getNombre() + " y grupo "+grupo+" "+e);
+        }
+        return clase;
+    }
 
 }

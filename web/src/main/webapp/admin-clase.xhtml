@@ -14,7 +14,7 @@
                     <h1>Administracion Clase</h1>
                     <p:outputLabel id="txtSelectMateria" value="Seleccione Materia:"  /><br />
                     <p:dataTable id="tblMaterias" var="materia" value="#{adminClase.materias}" selection="#{adminClase.materiaSeleccionada}" 
-                                 selectionMode="single" widgetVar="tblMateria" scrollHeight="100px"
+                                 selectionMode="single" widgetVar="tblMateria" scrollHeight="300"
                                  emptyMessage="No se encuentran materias con este criterio" scrollable="true"
                                  rowKey="#{materia.id}" style="margin-bottom:0" resizableColumns="true">
                         <p:ajax event="rowSelect" listener="#{adminClase.cargarClases}" update=":#{p:component('formAdminClase')}" />
@@ -99,19 +99,26 @@
                         </f:facet>
                     </p:dataTable>
                     <br />
+                    <p:fileUpload fileUploadListener="#{adminClase.upload}" mode="advanced" dragDropSupport="false"
+                                  update="msgs" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
 
                     <p:dialog id="pnlAgregarHorario" header="Agregar Horario" widgetVar="pnlAgregarHorario" resizable="false" dynamic="true">
-
-                        <p:outputLabel for="slcDia" value="Dia : " />
-                        <p:selectOneMenu id="slcDia" value="#{adminClase.dia}" required="true">
-                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
-                            <f:selectItems value="#{adminClase.dias}" />                        
-                        </p:selectOneMenu>
-                        <h:outputText id="displayRange" value="Hora Inicio : #{adminClase.horaInicio} Hora Fin : #{adminClase.horaFin}" />
-                        <p:slider for="horaIni,horaFin" display="displayRange" minValue="6" maxValue="22" range="true" displayTemplate="Hora Inicio : {min} Hora Fin : {max}" />
-                        <h:inputHidden id="horaIni" value="#{adminClase.horaInicio}" />
-                        <h:inputHidden id="horaFin" value="#{adminClase.horaFin}" />                       
-
+                        <h:panelGrid columns="3" cellpadding="5" class="ui-grid">
+                            <p:outputLabel value="Dia :" />    
+                            <p:outputLabel for="slcDia" value="-------------------------:" /> 
+                            <p:selectOneMenu id="slcDia" value="#{adminClase.dia}" required="true">
+                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{adminClase.dias}" />                        
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="Hora Inicial :" />
+                            <p:slider for="horaIni" minValue="6" maxValue="21" />
+                            <p:inputText id="horaIni" value="#{adminClase.horaInicio}" style="width: 100px" required="true" />
+                            
+                            <p:outputLabel value="Hora Final :" />
+                            <p:slider for="horaFin" minValue="7" maxValue="22" />
+                            <p:inputText id="horaFin" value="#{adminClase.horaFin}" style="width: 100px" required="true" />                            
+                        </h:panelGrid>
                         <br />
                         <p:commandButton value="Agregar Horario" actionListener="#{adminClase.agregarHorario}" update="tblHorario"/>
                     </p:dialog>

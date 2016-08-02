@@ -43,6 +43,14 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     @EJB
     private AdministracionHorarioLocal administracionHorario;
 
+    @EJB
+    private AdministracionAlternativaLocal administracionAlternativa;
+    
+    @Override
+    public List<Cromosoma> calcularAlternativa(List<Materia> materiasSeleccionadas) {
+        return administracionAlternativa.ejecutarAlgoritmoGenetico(materiasSeleccionadas);
+    }
+
     @Override
     public List<Usuario> getUsuarios() {
         return administracionUsuario.getUsuarios();
@@ -130,7 +138,12 @@ public class FachadaNegocio implements FachadaNegocioLocal {
 
     @Override
     public boolean agregarMateria(Materia materia) {
-        return administracionMateria.agregarMateria(materia);
+        try {
+            return administracionMateria.agregarMateria(materia);
+        } catch (Exception e) {
+            System.out.println("Ocurrio un error creacion la materia " + materia.getNombre());
+            return false;
+        }
     }
 
     @Override
@@ -236,6 +249,11 @@ public class FachadaNegocio implements FachadaNegocioLocal {
     @Override
     public List<Clase> getClasesPorMateria(Materia materia) {
         return administracionClase.getClasesPorMateria(materia);
+    }
+    
+    @Override
+    public Clase getClasePorMateriaGrupo(Materia materia, String grupo){
+        return administracionClase.getClasePorMateriaGrupo(materia, grupo);
     }
 
     @Override

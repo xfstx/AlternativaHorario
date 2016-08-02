@@ -18,6 +18,8 @@ import javax.ejb.Local;
 @Local
 public interface FachadaNegocioLocal {
 
+    List<Cromosoma> calcularAlternativa(List<Materia> materiasSeleccionadas);
+    
     List<Usuario> getUsuarios();
 
     boolean eliminarUsuario(Usuario usuario);
@@ -96,6 +98,8 @@ public interface FachadaNegocioLocal {
     
     List<Clase> getClasesPorMateria(Materia materia);
 
+    Clase getClasePorMateriaGrupo(Materia materia, String grupo);
+    
     List<Horario> getHorariosPorClase(Clase clase);
             
     boolean eliminarHorario(Horario horario);

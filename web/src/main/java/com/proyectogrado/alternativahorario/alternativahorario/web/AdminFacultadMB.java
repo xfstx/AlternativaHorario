@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +30,7 @@ import org.primefaces.model.UploadedFile;
 public class AdminFacultadMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
@@ -58,62 +57,56 @@ public class AdminFacultadMB implements Serializable {
     @Getter
     @Setter
     private Facultad facultadSeleccionada;
-
+    
     @Getter
     @Setter
     private List<String> sedes;
-
+    
     @Getter
     @Setter
     private UploadedFile file;
 
-    @Getter
-    @Setter
-    private boolean esAgregarVisible;
-    
-    @Getter
-    @Setter
-    private boolean esModificarVisible;
-    
-    
     @PostConstruct
     public void init() {
-        this.sedes = new ArrayList();
-        this.esAgregarVisible = false;
-        this.esModificarVisible = false;
         limpiarConsulta();
-        llenarSedes();
     }
 
     public void limpiarConsulta() {
         this.nombre = "";
         this.sede = "";
+        this.sedes = llenarListaSedes();
         this.facultades = fachadaNegocio.getFacultades();
         this.cantidadFacultades = facultades.size();
     }
 
-    public void llenarSedes() {
-        List<Sede> sedesOri = fachadaNegocio.getSedes();
-        for (Sede sede : sedesOri) {
-            this.sedes.add(sede.getNombre());
+    public List<String> llenarListaSedes() {
+        List<Sede> sedes = fachadaNegocio.getSedes();
+        List<String> sedesLabel = new ArrayList();
+        for (Sede sede : sedes) {
+            sedesLabel.add(sede.getNombre());                        
         }
+        return sedesLabel;
     }
-
+    
     public void eliminarFacultad(Facultad facultad) {
-        boolean eliminar = fachadaNegocio.eliminarFacultad(facultad);
-        if (eliminar) {
-            limpiarConsulta();
-            notificarEliminacionExitosa();
-        } else {
-            notificarEliminacionFallida();
-        }
+            boolean eliminar = fachadaNegocio.eliminarFacultad(facultad);
+            if (eliminar) {
+                limpiarConsulta();
+                notificarEliminacionExitosa();
+            } else {
+                notificarEliminacionFallida();
+            }
     }
-
+    
     public void eliminarFacultades() {
         if (validarFacultades()) {
-            fachadaNegocio.eliminarFacultades(facultadesSeleccionadas);
+            List<Facultad> elim = fachadaNegocio.eliminarFacultades(facultadesSeleccionadas);
             limpiarConsulta();
-            notificarEliminacionExitosa();
+            if (elim.isEmpty()) {
+                notificarEliminacionExitosa();
+            } else {
+                notificarEliminacionParcial();
+            }
         }
     }
 
@@ -130,11 +123,6 @@ public class AdminFacultadMB implements Serializable {
         this.sede = "";
     }
 
-    public void abrirAgregarFacultad(){
-        this.esAgregarVisible = true;
-        RequestContext.getCurrentInstance().execute("PF('wAgregarFacultad').show();");
-    }
-    
     public void agregarFacultad() {
         if (validarFacultad()) {
             Facultad facultad = new Facultad();
@@ -152,7 +140,7 @@ public class AdminFacultadMB implements Serializable {
             }
         }
     }
-
+    
     public Sede buscarSede(String nombreSede) {
         return fachadaNegocio.getSedePorNombre(nombreSede);
     }
@@ -167,32 +155,43 @@ public class AdminFacultadMB implements Serializable {
     }
 
     public void cerrarCrearDialog() {
-        this.esAgregarVisible = false;
         RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('wAgregarFacultad').hide();");
+        context.execute("PF('pnlAgregarFacultad').hide();");
+        limpiarPantalla();
     }
 
     public void abrirModificarFacultad(Facultad facultad) {
         this.nombre = facultad.getNombre();
         this.sede = facultad.getSede().getNombre();
         this.facultadSeleccionada = facultad;
-        this.esModificarVisible = true;
-        RequestContext.getCurrentInstance().execute("PF('wModificarFacultad').show();");
+        RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').show();");
+    }
+    
+    public void abrirAgregarFacultad(){
+        this.nombre = "";
+        this.sede = "";
+        this.facultadSeleccionada = null;
+        RequestContext.getCurrentInstance().execute("PF('pnlAgregarFacultad').show();");        
     }
 
-    public void modificarFacultad() {
+    public void modificarfacultad() {
         this.facultadSeleccionada.setNombre(this.nombre);
         this.facultadSeleccionada.setSede(buscarSede(this.sede));
         boolean modificarFacultad = fachadaNegocio.modificarFacultad(facultadSeleccionada);
         if (modificarFacultad) {
-            notificarModificacionExitosa();
-            limpiarPantalla();
+            notificarModificacionExitosa();            
             limpiarConsulta();
         } else {
             notificarModificacionFallida();
         }
-        this.esModificarVisible = false;
+        limpiarPantalla();
         RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').hide();");
+    }
+    
+    public void cerrarModificarDialog() {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('pnlModificarFacultad').hide();");
+        limpiarPantalla();
     }
 
     public void upload(FileUploadEvent event) {
@@ -250,7 +249,7 @@ public class AdminFacultadMB implements Serializable {
         }
         return true;
     }
-    
+
     public void notificarCreacionExitosa() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Facultad Creada Exitosamente");
         Messages.addFlashGlobal(msg);
@@ -267,7 +266,7 @@ public class AdminFacultadMB implements Serializable {
     }
 
     public void notificarNoSeleccion() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ERROR", "No ha seleccionado Facultad a Eliminar");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ERROR", "No ha seleccionado Facultades a Eliminar");
         Messages.addFlashGlobal(msg);
     }
 
@@ -276,13 +275,18 @@ public class AdminFacultadMB implements Serializable {
         Messages.addFlashGlobal(msg);
     }
 
-    public void notificarEliminacionFallida() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando la Facultad");
+    public void notificarEliminacionParcial() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la/s Facultad/s Parcialmente");
         Messages.addFlashGlobal(msg);
     }
-
+    
+    public void notificarEliminacionFallida() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error eliminando la Facultad");
+        Messages.addFlashGlobal(msg);
+    }
+    
     public void notificarModificacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se modifica la Facultad Exitosamente");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se modifica la facultad Exitosamente");
         Messages.addFlashGlobal(msg);
     }
 
@@ -290,10 +294,15 @@ public class AdminFacultadMB implements Serializable {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error al modificar la Facultad");
         Messages.addFlashGlobal(msg);
     }
-
-    public void notificarCargaArchivoExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Archivo de Facultades Cargado Exitosamente.");
-        Messages.addFlashGlobal(msg);
+    
+    public void notificarFacultadConFacultadAsignada(){
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ADVER", "No se puede eliminar la facultad por tiene Facultades asignadas");
+        Messages.addFlashGlobal(msg);        
     }
-
+    
+    public void notificarCargaArchivoExitosa(){
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Archivo de Facultades Cargado Exitosamente.");
+        Messages.addFlashGlobal(msg);       
+    }
+    
 }

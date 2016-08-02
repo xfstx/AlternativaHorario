@@ -14,7 +14,7 @@
                     <h1>Administracion Sede</h1> 
 
                     <p:dataTable id="tblSedes" var="sede" value="#{adminSede.sedes}" selection="#{adminSede.sedesSeleccionadas}" 
-                                 widgetVar="tblSede" emptyMessage="No se encuentran sedes con este criterio" scrollable="true"
+                                 emptyMessage="No se encuentran sedes con este criterio" scrollable="true"
                                  rowKey="#{sede.id}" style="margin-bottom:0" resizableColumns="true">
 
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
@@ -28,7 +28,7 @@
                         </p:column>
 
                         <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminSede.abrirModificarSede(sede)}" icon="ui-icon-pencil" />
+                            <p:commandButton actionListener="#{adminSede.abrirModificarSede(sede)}" icon="ui-icon-pencil" update="formAdminSedes" />
                         </p:column>
 
                         <p:column style="width:40px; text-align:center;">
@@ -38,9 +38,9 @@
                         <f:facet name="footer">
                             <h:outputText value="Cantidad Sedes : #{adminSede.cantidadSedes}" />
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonEliminar" value="Eliminar Sedes" icon="ui-icon-closethick" actionListener="#{adminSede.eliminarSedes}" update="tblSedes"/>
+                            <p:commandButton id="btonEliminar" value="Eliminar Sedes" icon="ui-icon-closethick" actionListener="#{adminSede.eliminarSedes}" update="formAdminSedes"/>
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregar" value="Agregar Sede" icon="fa-plus-square" onclick="PF('pnlAgregarSede').show();"/>                            
+                            <p:commandButton id="btonAgregar" value="Agregar Sedes" icon="fa-plus-square" actionListener="#{adminSede.abrirAgregarSede}" update="formAdminSedes"/>
                         </f:facet>
                     </p:dataTable>
 
@@ -54,7 +54,7 @@
                     <p:fileUpload fileUploadListener="#{adminSede.upload}" mode="advanced" dragDropSupport="false"
                                   update="tblSedes" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
                     
-                    <p:dialog id="pnlAgregarSede" header="Agregar Sede" widgetVar="pnlAgregarSede" showEffect="explode" hideEffect="bounce" dynamic="true" >
+                    <p:dialog id="pnlAgregarSede" header="Agregar Sede" widgetVar="pnlAgregarSede" dynamic="true" >
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 
                             <p:outputLabel for="txtNombre" value="Nombre :"  />

@@ -4,56 +4,57 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core">
+
     <body>
         <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
             <ui:define name="content">
-                <h:form id="formEnvioPrevisto">
-                    <p:growl id="msg" autoUpdate="true" showDetail="true" globalOnly="true"/>
-                    <h:panelGroup id="pnlPrincipal">    
-                        <p:dataTable id="tblFacultades" value="#{adminFacultad.facultades}" var="facultad" 
-                                     emptyMessage="No se encuentran facultades con este criterio" resizableColumns="true" 
-                                     rowKey="#{facultad.id}" editable="true" sortMode="multiple" 
-                                     scrollable="true" scrollHeight="400" editMode="cell" >
-                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                <h:form id="formAdminFacultades">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <h1>Administracion Facultad</h1> 
 
-                            <p:column headerText="Nombre" sortBy="#{facultad.nombre}" filterMatchMode="contains">
-                                <h:outputText value="#{facultad.nombre}" />
-                            </p:column>
+                    <p:dataTable id="tblFacultades" var="facultad" value="#{adminFacultad.facultades}" selection="#{adminFacultad.facultadesSeleccionadas}" 
+                                 emptyMessage="No se encuentran facultades con este criterio" scrollable="true"
+                                 rowKey="#{facultad.id}" style="margin-bottom:0" resizableColumns="true">
 
-                            <p:column headerText="Sede" sortBy="#{facultad.sede.nombre}" filterMatchMode="contains">
-                                <h:outputText value="#{facultad.sede.nombre}" />
-                            </p:column>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
 
-                            <p:column style="width:40px; text-align:center;">
-                                <p:commandButton actionListener="#{adminFacultad.abrirModificarFacultad(facultad)}" icon="ui-icon-pencil" />
-                            </p:column>
+                        <p:column headerText="Nombre" sortBy="#{facultad.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{facultad.nombre}" />
+                        </p:column>
 
-                            <p:column style="width:40px; text-align:center;">
-                                <p:commandButton actionListener="#{adminFacultad.eliminarFacultad(facultad)}" icon="ui-icon-closethick" update="tblFacultades"/>
-                            </p:column>
+                        <p:column headerText="Sede" sortBy="#{facultad.sede.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{facultad.sede.nombre}" />
+                        </p:column>
 
-                            <f:facet name="footer">
-                                <h:outputText value="Cantidad Facultades : #{adminFacultad.cantidadFacultades}" />
-                                <p:spacer width="30"/>
-                                <p:commandButton id="btonEliminar" value="Eliminar Facultades" icon="ui-icon-closethick" actionListener="#{adminFacultad.eliminarFacultades}" update="tblFacultades"/>
-                                <p:spacer width="30"/>
-                                <p:commandButton id="btonAgregar" value="Agregar Facultades" icon="fa-plus-square" onclick="PF('wAgregarFacultad').show();" />                            
-                            </f:facet>
-                        </p:dataTable>                    
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminFacultad.abrirModificarFacultad(facultad)}" icon="ui-icon-pencil" update="formAdminFacultades" />
+                        </p:column>
 
-                        <p:fileUpload fileUploadListener="#{adminFacultad.upload}" mode="advanced" dragDropSupport="false"
-                                      update="tblFacultades" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandButton actionListener="#{adminFacultad.eliminarFacultad(facultad)}" icon="ui-icon-closethick" update="tblFacultades"/>
+                        </p:column>
 
-                        <h:panelGroup id="pnlBotonesPrincipal" layout="block" style="display:block; text-align:right">
-                            <h:panelGroup id="pnlBtnProgramar" >
-                                <p:commandButton id="btnProgramar" value="Agregar Facult" rendered="false" />
-                            </h:panelGroup>
+                        <f:facet name="footer">
+                            <h:outputText value="Cantidad Facultades : #{adminFacultad.cantidadFacultades}" />
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonEliminar" value="Eliminar Facultades" icon="ui-icon-closethick" actionListener="#{adminFacultad.eliminarFacultades}" update="formAdminFacultades"/>
+                            <p:spacer width="30"/>
+                            <p:commandButton id="btonAgregar" value="Agregar Facultades" icon="fa-plus-square" actionListener="#{adminFacultad.abrirAgregarFacultad}" update="formAdminFacultades"/>
+                        </f:facet>
+                    </p:dataTable>
+
+                    <h:panelGroup id="pnlBotonesPrincipal" layout="block" style="display:block; text-align:right">
+                        <h:panelGroup id="pnlBtnProgramar" >
+                            <p:commandButton id="btnProgramar" value="Agregar Facult" rendered="false" />
                         </h:panelGroup>
                     </h:panelGroup>
-
-                    <p:dialog id="pnlAgregarFacultad" widgetVar="wAgregarFacultad" header="Agregar Facultad"
-                              resizable="false" visible="#{adminFacultad.esAgregarVisible}" dynamic="true">
+                    
+                    <br />
+                    <p:fileUpload fileUploadListener="#{adminFacultad.upload}" mode="advanced" dragDropSupport="false"
+                                  update="tblFacultades" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
+                    
+                    <p:dialog id="pnlAgregarFacultad" header="Agregar Facultad" widgetVar="pnlAgregarFacultad" dynamic="true" >
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 
                             <p:outputLabel for="txtNombre" value="Nombre :"  />
@@ -63,14 +64,12 @@
                             <p:selectOneMenu id="slcSede" value="#{adminFacultad.sede}" required="true">
                                 <f:selectItems value="#{adminFacultad.sedes}"/>
                             </p:selectOneMenu>
-
                         </h:panelGrid>
                         <br />
                         <p:commandButton value="Agregar Facultad" actionListener="#{adminFacultad.agregarFacultad}" update="tblFacultades"/>
                     </p:dialog>
 
-                    <p:dialog id="pnlModificarFacultad" widgetVar="wModificarFacultad" header="Modificar Facultad"
-                              resizable="false" visible="#{adminFacultad.esModificarVisible}" dynamic="true">
+                    <p:dialog id="pnlModificarFacultad" header="Modificar Facultad" widgetVar="pnlModificarFacultad" dynamic="true" >
                         <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
 
                             <p:outputLabel for="txtNombreMod" value="Nombre :"  />
@@ -82,7 +81,7 @@
                             </p:selectOneMenu>
                         </h:panelGrid>
                         <br />
-                        <p:commandButton value="Modificar Facultad" actionListener="#{adminFacultad.modificarFacultad}" update="tblFacultades"/>         
+                        <p:commandButton value="Modificar Facultad" actionListener="#{adminFacultad.modificarfacultad}" update="tblFacultades"/>
                     </p:dialog>
 
                 </h:form>

@@ -47,6 +47,13 @@ public class AdministracionMateria implements AdministracionMateriaLocal {
     @Override
     public boolean agregarMateria(Materia materia) {
         try {
+            System.out.println("------------------<");
+            System.out.println(""+materia.getNombre()+"s");
+            System.out.println(""+materia.getCarrera());
+            System.out.println(""+materia.getCreditos());
+            System.out.println(""+materia.getId());
+            System.out.println(""+materia.getSemestre());
+            System.out.println(""+materia.getIntensidadHoraria());
             fachadaPersistenciaMateria.create(materia);
         } catch (Exception e) {
             System.out.println("Ocurrio un error creacion la materia " + materia.getNombre());

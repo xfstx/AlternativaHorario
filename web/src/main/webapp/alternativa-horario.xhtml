@@ -13,13 +13,247 @@
             <ui:define name="content">
                 <h:form id="formAlternativa">
                     <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
-                    <h1>Calcular Altenativa</h1> 
+                    <h1>Calcular Altenativa</h1>
+                    <h:panelGroup id="Campnl">
+                        <p:commandButton id="cambio" value="Cambio" actionListener="#{alternativa.cambio}" update="formAlternativa" />
+                    </h:panelGroup>
+                    <h:panelGroup id="panelSeleccion" rendered="#{alternativa.visualizacion}">
+                        <h:panelGrid columns="3" cellpadding="5" class="ui-grid">
+                            <p:dataTable id="tblMaterias" var="materia" value="#{alternativa.materias}" selection="#{alternativa.materiaSeleccionada}" 
+                                         selectionMode="single" widgetVar="tblMateria" scrollHeight="400" 
+                                         emptyMessage="No se encuentran materias con este criterio" scrollable="true"
+                                         rowKey="#{materia.id}" resizableColumns="true"
+                                         style="margin-bottom:0;">
+                                <p:column headerText="Nombre" sortBy="#{materia.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{materia.nombre}" />
+                                </p:column>
+                                <p:column headerText="Carrera" sortBy="#{materia.carrera.nombre}" filterBy="#{materia.carrera.nombre}" filterMatchMode="exact" >
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tblMateria').filter()" >
+                                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{adminClase.carreras}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{materia.carrera.nombre}" />
+                                </p:column>
+                                <p:column headerText="Semestre" sortBy="#{materia.semestre}" filterBy="#{materia.semestre}" >
+                                    <f:facet name="filter">
+                                        <p:spinner onchange="PF('tblMateria').filter()" styleClass="year-spinner" min="0">
+                                            <f:converter converterId="javax.faces.Integer" />
+                                        </p:spinner>
+                                    </f:facet>
+                                    <h:outputText value="#{materia.semestre}" />
+                                </p:column>
+                                <f:facet name="header">
+                                    Materias Disponibles
+                                </f:facet>
+                                <f:facet name="footer" />
+                            </p:dataTable>
+                            <h:panelGroup>
+                                <p:commandButton id="agregarMateria" actionListener="#{alternativa.agregarMateria}" icon="ui-icon-seek-next" update="tblMateriasElegidas"/>
+                                <br /><br /><br />
+                                <p:commandButton id="eliminarMateria" actionListener="#{alternativa.eliminarMateria}" icon="ui-icon-seek-prev" update="tblMateriasElegidas"/>
+                            </h:panelGroup>
+                            <h:panelGroup style="height: 500px">
+                                <p:dataTable id="tblMateriasElegidas" var="materiaSelect" value="#{alternativa.materiasElegidas}" selection="#{alternativa.materiaElegidaSeleccionada}" 
+                                             selectionMode="single" widgetVar="tblMateriasElegidas" 
+                                             scrollable="true" scrollHeight="400"
+                                             rowKey="#{materiaSelect.id}" resizableColumns="true"
+                                             style="margin-bottom:0; height: border-box" >
+                                    <p:column headerText="Nombre" sortBy="#{materiaSelect.nombre}">
+                                        <h:outputText value="#{materiaSelect.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Carrera" sortBy="#{materiaSelect.carrera.nombre}">
+                                        <h:outputText value="#{materia.carrera.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Semestre" sortBy="#{materiaSelect.semestre}" >
+                                        <h:outputText value="#{materiaSelect.semestre}" />
+                                    </p:column>
+                                    <f:facet name="header">
+                                        Materias Seleccionadas
+                                    </f:facet>
+                                    <f:facet name="footer" />
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <br /><br />
+                        <p:commandButton id="calcular" value="Calcular Alternativa" actionListener="#{alternativa.calcularAlternativa}" update="formAlternativa"/>
+                    </h:panelGroup>
 
+                    <h:panelGroup id="alternativaCalculada" rendered="#{!alternativa.visualizacion}">
+                        
+                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+
+                            <h:panelGroup>
+                                <center><h2> Opcion 1 </h2></center>
+                                <p:dataTable var="line" value="#{alternativa.horarios1}">
+                                    <p:column headerText="Hora" width="50">
+                                        <h:outputText value="#{line.hora}" />
+                                    </p:column>
+                                    <p:column headerText="Lunes">
+                                        <h:outputText value="#{line.lunes}" />
+                                    </p:column>
+                                    <p:column headerText="Martes">
+                                        <h:outputText value="#{line.martes}" />
+                                    </p:column>
+                                    <p:column headerText="Miercoles">
+                                        <h:outputText value="#{line.miercoles}" />
+                                    </p:column>
+                                    <p:column headerText="Jueves">
+                                        <h:outputText value="#{line.jueves}" />
+                                    </p:column>
+                                    <p:column headerText="Viernes">
+                                        <h:outputText value="#{line.viernes}" />
+                                    </p:column>
+                                    <p:column headerText="Sabado">
+                                        <h:outputText value="#{line.sabado}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup>
+                                <center><h2> Opcion 2 </h2></center>
+                                <p:dataTable var="line" value="#{alternativa.horarios2}">
+                                    <p:column headerText="Hora" width="50">
+                                        <h:outputText value="#{line.hora}" />
+                                    </p:column>
+                                    <p:column headerText="Lunes">
+                                        <h:outputText value="#{line.lunes}" />
+                                    </p:column>
+                                    <p:column headerText="Martes">
+                                        <h:outputText value="#{line.martes}" />
+                                    </p:column>
+                                    <p:column headerText="Miercoles">
+                                        <h:outputText value="#{line.miercoles}" />
+                                    </p:column>
+                                    <p:column headerText="Jueves">
+                                        <h:outputText value="#{line.jueves}" />
+                                    </p:column>
+                                    <p:column headerText="Viernes">
+                                        <h:outputText value="#{line.viernes}" />
+                                    </p:column>
+                                    <p:column headerText="Sabado">
+                                        <h:outputText value="#{line.sabado}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <center><h2> Opcion 3 </h2></center>
+                                <p:dataTable var="line" value="#{alternativa.horarios3}">
+                                    <p:column headerText="Hora" width="50">
+                                        <h:outputText value="#{line.hora}" />
+                                    </p:column>
+                                    <p:column headerText="Lunes">
+                                        <h:outputText value="#{line.lunes}" />
+                                    </p:column>
+                                    <p:column headerText="Martes">
+                                        <h:outputText value="#{line.martes}" />
+                                    </p:column>
+                                    <p:column headerText="Miercoles">
+                                        <h:outputText value="#{line.miercoles}" />
+                                    </p:column>
+                                    <p:column headerText="Jueves">
+                                        <h:outputText value="#{line.jueves}" />
+                                    </p:column>
+                                    <p:column headerText="Viernes">
+                                        <h:outputText value="#{line.viernes}" />
+                                    </p:column>
+                                    <p:column headerText="Sabado">
+                                        <h:outputText value="#{line.sabado}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <center><h2> Opcion 4 </h2></center>
+                                <p:dataTable var="line" value="#{alternativa.horarios4}">
+                                    <p:column headerText="Hora" width="50">
+                                        <h:outputText value="#{line.hora}" />
+                                    </p:column>
+                                    <p:column headerText="Lunes">
+                                        <h:outputText value="#{line.lunes}" />
+                                    </p:column>
+                                    <p:column headerText="Martes">
+                                        <h:outputText value="#{line.martes}" />
+                                    </p:column>
+                                    <p:column headerText="Miercoles">
+                                        <h:outputText value="#{line.miercoles}" />
+                                    </p:column>
+                                    <p:column headerText="Jueves">
+                                        <h:outputText value="#{line.jueves}" />
+                                    </p:column>
+                                    <p:column headerText="Viernes">
+                                        <h:outputText value="#{line.viernes}" />
+                                    </p:column>
+                                    <p:column headerText="Sabado">
+                                        <h:outputText value="#{line.sabado}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup>
+                                <center><h2> Opcion 5 </h2></center>
+                                <p:dataTable var="line" value="#{alternativa.horarios5}">
+                                    <p:column headerText="Hora" width="50">
+                                        <h:outputText value="#{line.hora}" />
+                                    </p:column>
+                                    <p:column headerText="Lunes">
+                                        <h:outputText value="#{line.lunes}" />
+                                    </p:column>
+                                    <p:column headerText="Martes">
+                                        <h:outputText value="#{line.martes}" />
+                                    </p:column>
+                                    <p:column headerText="Miercoles">
+                                        <h:outputText value="#{line.miercoles}" />
+                                    </p:column>
+                                    <p:column headerText="Jueves">
+                                        <h:outputText value="#{line.jueves}" />
+                                    </p:column>
+                                    <p:column headerText="Viernes">
+                                        <h:outputText value="#{line.viernes}" />
+                                    </p:column>
+                                    <p:column headerText="Sabado">
+                                        <h:outputText value="#{line.sabado}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup>
+                                <center><h2> Opcion 6 </h2></center>
+                                <p:dataTable var="line" value="#{alternativa.horarios6}">
+                                    <p:column headerText="Hora" width="50">
+                                        <h:outputText value="#{line.hora}" />
+                                    </p:column>
+                                    <p:column headerText="Lunes">
+                                        <h:outputText value="#{line.lunes}" />
+                                    </p:column>
+                                    <p:column headerText="Martes">
+                                        <h:outputText value="#{line.martes}" />
+                                    </p:column>
+                                    <p:column headerText="Miercoles">
+                                        <h:outputText value="#{line.miercoles}" />
+                                    </p:column>
+                                    <p:column headerText="Jueves">
+                                        <h:outputText value="#{line.jueves}" />
+                                    </p:column>
+                                    <p:column headerText="Viernes">
+                                        <h:outputText value="#{line.viernes}" />
+                                    </p:column>
+                                    <p:column headerText="Sabado">
+                                        <h:outputText value="#{line.sabado}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+   
+                        </h:panelGrid>
+                    </h:panelGroup>
+                    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="Imgs/loading.gif" />                       
+                    </p:dialog>
                 </h:form>
             </ui:define>
-
         </ui:composition>
-
     </body>
 </html>
 

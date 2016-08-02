@@ -156,6 +156,13 @@ public class AdminSedeMB implements Serializable {
         this.sedeSeleccionada = sede;
         RequestContext.getCurrentInstance().execute("PF('pnlModificarSede').show();");
     }
+    
+    public void abrirAgregarSede(){
+        this.nombre = "";
+        this.direccion = "";
+        this.sedeSeleccionada = null;
+        RequestContext.getCurrentInstance().execute("PF('pnlAgregarSede').show();");        
+    }
 
     public void modificarSede() {
         this.sedeSeleccionada.setNombre(this.nombre);

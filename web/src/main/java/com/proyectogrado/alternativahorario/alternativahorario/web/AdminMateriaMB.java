@@ -73,6 +73,10 @@ public class AdminMateriaMB implements Serializable {
     @Getter
     @Setter
     private Materia materiaMod;
+    
+    @Getter
+    @Setter
+    private String errorLineas;
 
     public AdminMateriaMB() {
     }
@@ -87,6 +91,7 @@ public class AdminMateriaMB implements Serializable {
     public void limpiarPantalla() {
         this.materias = fachadaNegocio.getMaterias();
         this.cantidadMaterias = materias.size();
+        this.errorLineas = "";
     }
 
     public void limpiarAgregar() {
@@ -235,10 +240,12 @@ public class AdminMateriaMB implements Serializable {
     public void cargarArchivo(InputStream fis) {
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
         String linea;
+        int numeroLinea = 0;
         try {
             while ((linea = br.readLine()) != null) {
+                numeroLinea++;
                 try {
-                    cargarMateria(linea);
+                    cargarMateria(linea, numeroLinea);
                 } catch (Exception e) {
                     System.out.println("Error leyendo linea "+e);
                 }
@@ -246,22 +253,36 @@ public class AdminMateriaMB implements Serializable {
         } catch (Exception e) {
             System.out.println("Error leyendo linea mientras "+e);
         }
+        reportarErrorLeyendoArchivo();
+    }
+        
+    public void reportarErrorLeyendoArchivo(){
+        if(!errorLineas.isEmpty()){
+            notificarErrorLineasArchivo(errorLineas);
+        }        
     }
 
-    public void cargarMateria(String linea) {
-        System.out.println("" + linea);
-        String mate = linea.substring(0, linea.indexOf("-"));
-        String carr = linea.substring(linea.indexOf("-") + 1, linea.indexOf("+"));
-        int semes = Integer.parseInt(linea.substring(linea.indexOf("+") + 1, linea.indexOf("*")));
-        int credi = Integer.parseInt(linea.substring(linea.indexOf("*") + 1, linea.indexOf("/")));
-        int inten = Integer.parseInt(linea.substring(linea.indexOf("/") + 1));
-        Materia nuevaMateria = new Materia();
-        nuevaMateria.setNombre(mate);
-        nuevaMateria.setCarrera(buscarCarrera(carr));
-        nuevaMateria.setSemestre(semes);
-        nuevaMateria.setCreditos(credi);
-        nuevaMateria.setIntensidadHoraria(inten);
-        boolean creacion = fachadaNegocio.agregarMateria(nuevaMateria);
+    public void cargarMateria(String linea, int numeroLinea) {
+        try {
+            System.out.println("" + linea);
+            String mate = linea.substring(0, linea.indexOf("-"));
+            String carr = linea.substring(linea.indexOf("-") + 1, linea.indexOf("+"));
+            int semes = Integer.parseInt(linea.substring(linea.indexOf("+") + 1, linea.indexOf("*")));
+            int credi = Integer.parseInt(linea.substring(linea.indexOf("*") + 1, linea.indexOf("/")));
+            int inten = Integer.parseInt(linea.substring(linea.indexOf("/") + 1));
+            Materia nuevaMateria = new Materia();
+            nuevaMateria.setNombre(mate);
+            nuevaMateria.setCarrera(buscarCarrera(carr));
+            nuevaMateria.setSemestre(semes);
+            nuevaMateria.setCreditos(credi);
+            nuevaMateria.setIntensidadHoraria(inten);
+            boolean creacion = fachadaNegocio.agregarMateria(nuevaMateria);
+            if(creacion){
+                errorLineas += "Error con la linea "+numeroLinea+" <br/>";
+            }
+        } catch (Exception e) {
+            errorLineas += "Error en la linea "+numeroLinea+" <br/>";
+        }        
     }
 
     public void notificarNoSeleccion() {
@@ -307,6 +328,12 @@ public class AdminMateriaMB implements Serializable {
     public void notificarModificacionFallida() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error en la Modificacion de la Materia");
         Messages.addFlashGlobal(msg);
+    }
+    
+    public void notificarErrorLineasArchivo(String error) {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", error);
+        Messages.addFlashGlobal(msg);
+        this.errorLineas = "";
     }
 
 }
