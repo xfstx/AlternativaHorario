@@ -131,7 +131,6 @@ public class AdminFacultadMB implements Serializable {
 
             boolean creacion = fachadaNegocio.agregarFacultad(facultad);
             if (creacion) {
-                cerrarCrearDialog();
                 limpiarPantalla();
                 limpiarConsulta();
                 notificarCreacionExitosa();
@@ -154,46 +153,18 @@ public class AdminFacultadMB implements Serializable {
         return true;
     }
 
-    public void cerrarCrearDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarFacultad').hide();");
-        limpiarPantalla();
+    public void abrirAgregarFacultad(){
+        this.nombre = "";
+        this.sede = "";
+        this.facultadSeleccionada = null;        
     }
-
+    
     public void abrirModificarFacultad(Facultad facultad) {
         this.nombre = facultad.getNombre();
         this.sede = facultad.getSede().getNombre();
         this.facultadSeleccionada = facultad;
-        RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').show();");
     }
     
-    public void abrirAgregarFacultad(){
-        this.nombre = "";
-        this.sede = "";
-        this.facultadSeleccionada = null;
-        RequestContext.getCurrentInstance().execute("PF('pnlAgregarFacultad').show();");        
-    }
-
-    public void modificarfacultad() {
-        this.facultadSeleccionada.setNombre(this.nombre);
-        this.facultadSeleccionada.setSede(buscarSede(this.sede));
-        boolean modificarFacultad = fachadaNegocio.modificarFacultad(facultadSeleccionada);
-        if (modificarFacultad) {
-            notificarModificacionExitosa();            
-            limpiarConsulta();
-        } else {
-            notificarModificacionFallida();
-        }
-        limpiarPantalla();
-        RequestContext.getCurrentInstance().execute("PF('pnlModificarFacultad').hide();");
-    }
-    
-    public void cerrarModificarDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlModificarFacultad').hide();");
-        limpiarPantalla();
-    }
-
     public void upload(FileUploadEvent event) {
         UploadedFile file = event.getFile();
         InputStream archivo;
@@ -271,27 +242,17 @@ public class AdminFacultadMB implements Serializable {
     }
 
     public void notificarEliminacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la/s Facultad/s Exitosamente");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se elimino la/s Facultad/s Exitosamente");
         Messages.addFlashGlobal(msg);
     }
 
     public void notificarEliminacionParcial() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la/s Facultad/s Parcialmente");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ERROR", "Se elimino la/s Facultad/s Parcialmente");
         Messages.addFlashGlobal(msg);
     }
     
     public void notificarEliminacionFallida() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error eliminando la Facultad");
-        Messages.addFlashGlobal(msg);
-    }
-    
-    public void notificarModificacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se modifica la facultad Exitosamente");
-        Messages.addFlashGlobal(msg);
-    }
-
-    public void notificarModificacionFallida() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error al modificar la Facultad");
         Messages.addFlashGlobal(msg);
     }
     

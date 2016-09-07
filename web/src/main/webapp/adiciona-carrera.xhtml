@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="formAdicionCarrera">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <h1>Adcionar Carrera</h1> 
+
+                    <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+
+                        <p:outputLabel for="txtNombre" value="Nombre :"  />
+                        <p:inputText id="txtNombre" value="#{adminCarrera.nombre}" required="true" /> 
+
+                        <p:outputLabel for="slcFacultad" value="Facultad :"  />
+                        <p:selectOneMenu id="slcFacultad" value="#{adminCarrera.facultad}" >
+                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{adminCarrera.facultades}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="txtPlan" value="Plan Estudios:"  />
+                        <p:inputText id="txtPlan" value="#{adminCarrera.planEstudios}" required="true" /> 
+
+                        <p:outputLabel for="spnSnies" value="Snies :"  />
+                        <p:spinner id="spnSnies" value="#{adminCarrera.snies}" min="0">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </p:spinner>
+
+                        <p:outputLabel for="spnCreditos" value="Creditos :"  />                                
+                        <p:spinner id="spnCreditos" value="#{adminCarrera.creditos}" min="0">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </p:spinner>
+
+                        <p:outputLabel for="spnSemestres" value="Semestres :"  />                                
+                        <p:spinner id="spnSemestres" value="#{adminCarrera.semestres}" min="0">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </p:spinner>
+
+                        <p:outputLabel for="spnMaterias" value="Materias :"  />                                
+                        <p:spinner id="spnMaterias" value="#{adminCarrera.materias}" min="0">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </p:spinner>
+
+                        <p:outputLabel for="txtDescripcion" value="Descripcion :"  />
+                        <p:inputTextarea id="txtDescripcion" value="#{adminCarrera.descripcion}" required="true" />
+
+                    </h:panelGrid>
+
+                    <br />
+                    <br />
+                    <p:commandButton id="btonAdiciona" value="Adicionar" actionListener="#{adminCarrera.agregarCarrera()}" action="admin-carrera.xhtml" />
+                    <br />
+                    <br />
+                    <p:fileUpload fileUploadListener="#{adminCarrera.upload}" mode="advanced" dragDropSupport="false"
+                                  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+

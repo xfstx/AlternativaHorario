@@ -18,7 +18,6 @@ import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -65,7 +64,7 @@ public class AdminCarreraMB implements Serializable {
 
     @Getter
     @Setter
-    private String snies;
+    private int snies;
 
     @Getter
     @Setter
@@ -147,7 +146,7 @@ public class AdminCarreraMB implements Serializable {
         this.nombre = "";
         this.facultad = "";
         this.planEstudios = "";
-        this.snies = "";
+        this.snies = 0;
         this.creditos = 0;
         this.semestres = 0;
         this.materias = 0;
@@ -166,13 +165,12 @@ public class AdminCarreraMB implements Serializable {
     }
 
     public void agregarCarrera() {
-        System.out.println("-< Agregar Carrera");
         if (validarCarrera()) {
             Carrera carrera = new Carrera();
             carrera.setNombre(this.nombre);
             carrera.setFacultad(buscarFacultad(this.facultad));
             carrera.setPlanEstudio(new BigInteger(this.planEstudios));
-            carrera.setSnies(this.snies);
+            carrera.setSnies(this.snies+"");
             carrera.setCreditos(BigInteger.valueOf(this.creditos));
             carrera.setSemestres(BigInteger.valueOf(this.semestres));
             carrera.setMaterias(BigInteger.valueOf(this.materias));
@@ -180,7 +178,6 @@ public class AdminCarreraMB implements Serializable {
 
             boolean creacion = fachadaNegocio.agregarCarrera(carrera);
             if (creacion) {
-                cerrarCrearDialog();
                 limpiarPantalla();
                 limpiarConsulta();
                 notificarCreacionExitosa();
@@ -188,11 +185,6 @@ public class AdminCarreraMB implements Serializable {
                 notificarCreacionFallida();
             }
         }
-    }
-
-    public void cerrarCrearDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarCarrera').hide();");
     }
 
     public Facultad buscarFacultad(String nombre) {
@@ -209,7 +201,6 @@ public class AdminCarreraMB implements Serializable {
     }
 
     public void eliminarCarrera(Carrera carrera) {
-        System.out.println("-< Eliminar " + carrera.getNombre() + " - " + carrera.getDescripcion());
         boolean eliminar = fachadaNegocio.eliminarCarrera(carrera);
         if (eliminar) {
             limpiarConsulta();
@@ -245,13 +236,6 @@ public class AdminCarreraMB implements Serializable {
         this.modSemestres = carrera.getSemestres().intValue();
         this.modMaterias = carrera.getMaterias().intValue();
         this.modDescripcion = carrera.getDescripcion();
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlModificarCarrera').show();");
-    }
-
-    public void modificarCarrera() {
-
-        RequestContext.getCurrentInstance().execute("PF('pnlModificarCarrera').hide();");
     }
 
     public void upload(FileUploadEvent event) {

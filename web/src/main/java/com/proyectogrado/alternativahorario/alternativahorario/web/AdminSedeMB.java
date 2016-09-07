@@ -125,7 +125,6 @@ public class AdminSedeMB implements Serializable {
 
             boolean creacion = fachadaNegocio.agregarSede(sede);
             if (creacion) {
-                cerrarCrearDialog();
                 limpiarPantalla();
                 limpiarConsulta();
                 notificarCreacionExitosa();
@@ -143,39 +142,11 @@ public class AdminSedeMB implements Serializable {
         }
         return true;
     }
-
-    public void cerrarCrearDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarSede').hide();");
-        limpiarPantalla();
-    }
-
+    
     public void abrirModificarSede(Sede sede) {
         this.nombre = sede.getNombre();
         this.direccion = sede.getDireccion();
         this.sedeSeleccionada = sede;
-        RequestContext.getCurrentInstance().execute("PF('pnlModificarSede').show();");
-    }
-    
-    public void abrirAgregarSede(){
-        this.nombre = "";
-        this.direccion = "";
-        this.sedeSeleccionada = null;
-        RequestContext.getCurrentInstance().execute("PF('pnlAgregarSede').show();");        
-    }
-
-    public void modificarSede() {
-        this.sedeSeleccionada.setNombre(this.nombre);
-        this.sedeSeleccionada.setDireccion(this.direccion);
-        boolean modificarSede = fachadaNegocio.modificarSede(sedeSeleccionada);
-        if (modificarSede) {
-            notificarModificacionExitosa();            
-            limpiarConsulta();
-        } else {
-            notificarModificacionFallida();
-        }
-        limpiarPantalla();
-        RequestContext.getCurrentInstance().execute("PF('pnlModificarSede').hide();");
     }
 
     public boolean validarSedeNombre(Sede sedeNombre) {
@@ -252,12 +223,12 @@ public class AdminSedeMB implements Serializable {
     }
 
     public void notificarEliminacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la/s Sede/s Exitosamente");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se elimino la/s Sede/s Exitosamente");
         Messages.addFlashGlobal(msg);
     }
 
     public void notificarEliminacionParcial() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la/s Sede/s Parcialmente");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ADVER", "Se elimino la/s Sede/s Parcialmente");
         Messages.addFlashGlobal(msg);
     }
     
@@ -265,17 +236,7 @@ public class AdminSedeMB implements Serializable {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error eliminando la Sede");
         Messages.addFlashGlobal(msg);
     }
-    
-    public void notificarModificacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se modifica la sede Exitosamente");
-        Messages.addFlashGlobal(msg);
-    }
-
-    public void notificarModificacionFallida() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error al modificar la Sede");
-        Messages.addFlashGlobal(msg);
-    }
-    
+        
     public void notificarSedeConFacultadAsignada(){
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ADVER", "No se puede eliminar la sede por tiene Facultades asignadas");
         Messages.addFlashGlobal(msg);        

@@ -18,6 +18,15 @@
 
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
 
+                        <p:column style="width:40px; text-align:center;">
+                            <p:link styleClass="ui-icon ui-icon-pencil" outcome="modificacion-carrera.xhtml" title="Modificar" >
+                                <f:param name="nombre" value="#{carrera.nombre}"/>
+                            </p:link>
+                        </p:column>    
+                        <p:column style="width:40px; text-align:center;">
+                            <p:commandLink actionListener="#{adminCarrera.eliminarCarrera(carrera)}" styleClass="ui-icon ui-icon-closethick" title="Eliminar" update="tblCarreras"/>
+                        </p:column>
+                        
                         <p:column headerText="Nombre" sortBy="#{carrera.nombre}" filterMatchMode="contains" style="width:220px;">
                             <h:outputText value="#{carrera.nombre}" />
                         </p:column>
@@ -61,74 +70,20 @@
                             <h:outputText value="#{carrera.materias}" />
                         </p:column>
 
-                        <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminCarrera.abrirModificarCarrera(carrera)}" icon="ui-icon-pencil" />
-                        </p:column>
-
-                        <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminCarrera.eliminarCarrera(carrera)}" icon="ui-icon-closethick" update="tblCarreras"/>
-                        </p:column>
-
                         <f:facet name="footer">
                             <h:outputText value="Cantidad Carreras : #{adminCarrera.cantidadCarreras}" />
                             <p:spacer width="30"/>
                             <p:commandButton id="btonEliminar" value="Eliminar Carreras" icon="ui-icon-closethick" actionListener="#{adminCarrera.eliminarCarreras}" update="tblCarreras"/>
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregar" value="Agregar Carrera" icon="fa-plus-square" onclick="PF('pnlAgregarCarrera').show();"/>                            
+                            <p:commandButton id="btonAgregar" value="Agregar Carrera" icon="fa-plus-square" action="adiciona-carrera.xhtml" />                            
                         </f:facet>
 
                     </p:dataTable>                    
-
-                    <h:panelGroup id="pnlBotonesPrincipal" layout="block" style="display:block; text-align:right">
-                        <h:panelGroup id="pnlBtnProgramar" >
-                            <p:commandButton id="btnProgramar" value="Agregar Facult" rendered="false" />
-                        </h:panelGroup>
-                    </h:panelGroup>
                     
                     <br />
                     <p:fileUpload fileUploadListener="#{adminCarrera.upload}" mode="advanced" dragDropSupport="false"
                                   update="tblCarreras" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />                    
                     
-                    <p:dialog id="pnlAgregarCarrera" header="Agregar Carrera" widgetVar="pnlAgregarCarrera" showEffect="explode" hideEffect="bounce">
-                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
-
-                            <p:outputLabel for="txtNombre" value="Nombre :"  />
-                            <p:inputText id="txtNombre" value="#{adminCarrera.nombre}" required="true" /> 
-
-                            <p:outputLabel for="slcFacultad" value="Facultad :"  />
-                            <p:selectOneMenu id="slcFacultad" value="#{adminCarrera.facultad}" >
-                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{adminCarrera.facultades}" />
-                            </p:selectOneMenu>
-
-                            <p:outputLabel for="txtPlan" value="Plan Estudios:"  />
-                            <p:inputText id="txtPlan" value="#{adminCarrera.planEstudios}" required="true" /> 
-
-                            <p:outputLabel for="txtSnies" value="Snies :"  />
-                            <p:inputText id="txtSnies" value="#{adminCarrera.snies}" required="true" /> 
-
-                            <p:outputLabel for="spnCreditos" value="Creditos :"  />                                
-                            <p:spinner id="spnCreditos" value="#{adminCarrera.creditos}" min="0">
-                                <f:converter converterId="javax.faces.Integer" />
-                            </p:spinner>
-
-                            <p:outputLabel for="spnSemestres" value="Semestres :"  />                                
-                            <p:spinner id="spnSemestres" value="#{adminCarrera.semestres}" min="0">
-                                <f:converter converterId="javax.faces.Integer" />
-                            </p:spinner>
-
-                            <p:outputLabel for="spnMaterias" value="Materias :"  />                                
-                            <p:spinner id="spnMaterias" value="#{adminCarrera.materias}" min="0">
-                                <f:converter converterId="javax.faces.Integer" />
-                            </p:spinner>
-
-                            <p:outputLabel for="txtDescripcion" value="Descripcion :"  />
-                            <p:inputText id="txtDescripcion" value="#{adminCarrera.descripcion}" required="true" />
-
-                        </h:panelGrid>
-                        <br />
-                        <p:commandButton value="Agregar Carrera" actionListener="#{adminCarrera.agregarCarrera}" update="tblCarreras"/>
-                    </p:dialog>
                 </h:form>
             </ui:define>            
         </ui:composition>

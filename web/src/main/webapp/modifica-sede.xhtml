@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="metadata">
+                <f:metadata>
+                    <f:viewParam name="nombre" value="#{modificacionSede.nombre}"/>               
+                    <f:viewAction action="#{modificacionSede.cargarDatos()}"/>
+                </f:metadata>
+            </ui:define>
+            <ui:define name="content">
+                <h:form id="formModificacionSedes">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <h1>Modificar Sede</h1> 
+                    <br/>
+                    <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+                        <p:outputLabel for="txtNombre" value="Nombre :  "  />
+                        <p:inputText id="txtNombre" value="#{modificacionSede.nombre}" required="true" /> 
+
+                        <p:outputLabel for="txtDireccion" value="Direccion :"  />
+                        <p:inputText id="txtDireccion" value="#{modificacionSede.direccion}" required="true" /> 
+                    </h:panelGrid>
+                    <br />
+                    <p:commandButton id="btonModificar" value="Modificar" actionListener="#{modificacionSede.modificarSede()}" action="admin-sede.xhtml" />
+                    <br />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+

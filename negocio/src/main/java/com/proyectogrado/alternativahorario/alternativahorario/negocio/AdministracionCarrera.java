@@ -54,6 +54,12 @@ public class AdministracionCarrera implements AdministracionCarreraLocal {
 
     @Override
     public boolean modificarCarrera(Carrera carrera) {
+        try {
+            fachadaPersistenciaCarrera.edit(carrera);
+        } catch (Exception e) {
+            System.out.println("Ocurrio un error modificacion la carrera " + carrera.getNombre());
+            return false;
+        }
         return true;
     }
 

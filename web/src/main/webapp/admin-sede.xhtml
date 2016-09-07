@@ -28,11 +28,13 @@
                         </p:column>
 
                         <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminSede.abrirModificarSede(sede)}" icon="ui-icon-pencil" update="formAdminSedes" />
+                            <p:link styleClass="ui-icon ui-icon-pencil" outcome="modifica-sede.xhtml" title="Modificar" >
+                                <f:param name="nombre" value="#{sede.nombre}"/>
+                            </p:link> 
                         </p:column>
 
                         <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminSede.eliminarSede(sede)}" icon="ui-icon-closethick" update="tblSedes"/>
+                            <p:commandLink actionListener="#{adminSede.eliminarSede(sede)}" styleClass="ui-icon ui-icon-closethick" title="Eliminar" update="tblSedes"/>
                         </p:column>
 
                         <f:facet name="footer">
@@ -40,48 +42,10 @@
                             <p:spacer width="30"/>
                             <p:commandButton id="btonEliminar" value="Eliminar Sedes" icon="ui-icon-closethick" actionListener="#{adminSede.eliminarSedes}" update="formAdminSedes"/>
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregar" value="Agregar Sedes" icon="fa-plus-square" actionListener="#{adminSede.abrirAgregarSede}" update="formAdminSedes"/>
+                            <p:commandButton id="btonAgregar" value="Agregar Sedes" icon="fa-plus-square" action="adiciona-sede.xhtml" />
                         </f:facet>
                     </p:dataTable>
-
-                    <h:panelGroup id="pnlBotonesPrincipal" layout="block" style="display:block; text-align:right">
-                        <h:panelGroup id="pnlBtnProgramar" >
-                            <p:commandButton id="btnProgramar" value="Agregar Facult" rendered="false" />
-                        </h:panelGroup>
-                    </h:panelGroup>
                     
-                    <br />
-                    <p:fileUpload fileUploadListener="#{adminSede.upload}" mode="advanced" dragDropSupport="false"
-                                  update="tblSedes" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
-                    
-                    <p:dialog id="pnlAgregarSede" header="Agregar Sede" widgetVar="pnlAgregarSede" dynamic="true" >
-                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
-
-                            <p:outputLabel for="txtNombre" value="Nombre :"  />
-                            <p:inputText id="txtNombre" value="#{adminSede.nombre}" required="true" /> 
-
-                            <p:outputLabel for="txtDireccion" value="Direccion :"  />
-                            <p:inputText id="txtDireccion" value="#{adminSede.direccion}" required="true" /> 
-
-                        </h:panelGrid>
-                        <br />
-                        <p:commandButton value="Agregar Sede" actionListener="#{adminSede.agregarSede}" update="tblSedes"/>
-                    </p:dialog>
-
-                    <p:dialog id="pnlModificarSede" header="Modificar Sede" widgetVar="pnlModificarSede" dynamic="true" >
-                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
-
-                            <p:outputLabel for="txtNombreMod" value="Nombre :"  />
-                            <p:inputText id="txtNombreMod" value="#{adminSede.nombre}" required="true" /> 
-
-                            <p:outputLabel for="txtDireccionMod" value="Direccion :"  />
-                            <p:inputText id="txtDireccionMod" value="#{adminSede.direccion}" required="true" /> 
-
-                        </h:panelGrid>
-                        <br />
-                        <p:commandButton value="Modificar Sede" actionListener="#{adminSede.modificarSede}" update="tblSedes"/>
-                    </p:dialog>
-
                 </h:form>
             </ui:define>
         </ui:composition>

@@ -2,6 +2,7 @@ package com.proyectogrado.alternativahorario.alternativahorario.negocio;
 
 import com.proyectogrado.alternativahorario.entidades.Facultad;
 import com.proyectogrado.alternativahorario.persistencia.FachadaPersistenciaFacultadLocal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -43,7 +44,7 @@ public class AdministracionFacultad implements AdministracionFacultadLocal {
         for (Facultad facultad : facultades) {
             eliminarFacultad(facultad);
         }
-        return null;
+        return new ArrayList();
     }
 
     @Override
