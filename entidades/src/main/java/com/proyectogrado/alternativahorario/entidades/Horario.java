@@ -2,19 +2,19 @@ package com.proyectogrado.alternativahorario.entidades;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +24,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "horarios")
+@SequenceGenerator(name = "SecuenciaHorario", sequenceName = "SEC_IDHORARIOS")
 @NamedQueries({
     @NamedQuery(name = "Horario.findByClase", query = "SELECT h FROM Horario h WHERE h.clases = :clase")})
 public class Horario implements Serializable {
@@ -33,6 +34,7 @@ public class Horario implements Serializable {
     @Getter
     @Setter
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SecuenciaHorario")
     @Basic(optional = false)
     @Column(name = "id")
     private BigDecimal id;

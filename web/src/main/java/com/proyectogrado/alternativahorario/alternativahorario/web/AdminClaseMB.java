@@ -19,12 +19,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -52,7 +50,7 @@ public class AdminClaseMB implements Serializable {
     @Getter
     @Setter
     private String profesor;
-    
+
     @Getter
     @Setter
     private String dia;
@@ -108,11 +106,15 @@ public class AdminClaseMB implements Serializable {
     @Getter
     @Setter
     private int cantidadMaterias;
-    
+
     @Getter
     @Setter
-    private String errorLineas;
-    
+    private boolean esAddClase;
+
+    @Getter
+    @Setter
+    private boolean esAddHorario;
+
     @PostConstruct
     public void init() {
         this.materias = new ArrayList();
@@ -130,7 +132,11 @@ public class AdminClaseMB implements Serializable {
         this.grupo = "";
         this.materias = fachadaNegocio.getMaterias();
         this.cantidadMaterias = materias.size();
-        this.errorLineas = "";
+        this.dia = "";
+        this.horaFin = null;
+        this.horaInicio = null;
+        this.esAddClase = false;
+        this.esAddHorario = false;
     }
 
     public void llenarCarreras() {
@@ -140,10 +146,6 @@ public class AdminClaseMB implements Serializable {
         }
     }
 
-    public void prueba(){
-        System.out.println("This is a test");
-    }
-    
     public Carrera buscarCarrera(String nombreCarrera) {
         return fachadaNegocio.getCarreraPorNombre(nombreCarrera);
     }
@@ -158,9 +160,13 @@ public class AdminClaseMB implements Serializable {
     }
 
     public void cargarClases() {
+        this.claseSeleccionada = null;
+        this.horarioSeleccionado = null;
+        this.horarios = null;
+        limpiarPantalla();
         this.clases = fachadaNegocio.getClasesPorMateria(materiaSeleccionada);
     }
-    
+
     public void agregarClase() {
         Clase nuevaClase = new Clase();
         nuevaClase.setMateria(this.materiaSeleccionada);
@@ -171,45 +177,69 @@ public class AdminClaseMB implements Serializable {
         boolean modificar = fachadaNegocio.modificarMateria(this.materiaSeleccionada);
         if (modificar) {
             notificarAgregarClaseExitosa();
-            limpiarPantalla();            
+            limpiarPantalla();
+            cargarClases();
         } else {
             notificarAgregarClaseFallida();
         }
-        cerrarCrearDialogAgregarClase();
+        this.esAddClase = false;
     }
 
-    public void cerrarCrearDialogAgregarClase() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAddClass').hide();");
-    }
-    
     public void eliminarClase() {
-        boolean eliminar = fachadaNegocio.eliminarClase(claseSeleccionada);
-        if (eliminar) {
-            notificarEliminacionClaseExitosa();
-        } else {
-            notificarEliminacionClaseFallida();
+        if (validarEliminarClase()) {
+            boolean eliminar = fachadaNegocio.eliminarClase(claseSeleccionada);
+            if (eliminar) {
+                notificarEliminacionClaseExitosa();
+            } else {
+                notificarEliminacionClaseFallida();
+            }
         }
     }
-    
+
+    public boolean validarEliminarClase() {
+        if (claseSeleccionada.getHorarioList().size() > 0) {
+            notificarClaseAsignada();
+            return false;
+        }
+        return true;
+    }
+
     public void cargarHorarios() {
+        limpiarPantalla();
         this.horarios = fachadaNegocio.getHorariosPorClase(claseSeleccionada);
     }
-    
+
     public void agregarHorario() {
-        Horario nuevoHorario = new Horario();
-        nuevoHorario.setDia(this.dia);
-        nuevoHorario.setHorainicio(this.horaInicio);
-        nuevoHorario.setHorafin(this.horaFin);
-        nuevoHorario.setClases(this.claseSeleccionada);
-        this.claseSeleccionada.getHorarioList().add(nuevoHorario);
-        boolean modificar = fachadaNegocio.modificarClase(claseSeleccionada);
-        if (modificar) {
-            notificarAgregarHorarioExitosa();
-        } else {
-            notificarAgregarHorarioFallida();
+        if (validarHorarioAgregado()) {
+            Horario nuevoHorario = new Horario();
+            nuevoHorario.setDia(this.dia);
+            nuevoHorario.setHorainicio(this.horaInicio);
+            nuevoHorario.setHorafin(this.horaFin);
+            nuevoHorario.setClases(this.claseSeleccionada);
+            this.claseSeleccionada.getHorarioList().add(nuevoHorario);
+            boolean modificar = fachadaNegocio.modificarClase(claseSeleccionada);
+            if (modificar) {
+                notificarAgregarHorarioExitosa();
+                limpiarPantalla();
+                cargarHorarios();
+            } else {
+                notificarAgregarHorarioFallida();
+            }
+            this.esAddHorario = false;
         }
-        cerrarCrearDialogAgregarHorario();
+    }
+
+    public boolean validarHorarioAgregado() {
+        if (horaInicio.compareTo(horaFin) < 0) {
+            if (dia.equals("Seleccione")) {
+                notificarSeleccioneDia();
+                return false;
+            }
+            return true;
+        } else {
+            notificarErrorHoras();
+            return false;
+        }
     }
 
     public void eliminarHorarios() {
@@ -219,11 +249,6 @@ public class AdminClaseMB implements Serializable {
         } else {
             notificarEliminacionHorarioFallida();
         }
-    }
-
-    public void cerrarCrearDialogAgregarHorario() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarHorario').hide();");
     }
 
     public String getFechaFormateada(Date fecha) {
@@ -240,17 +265,16 @@ public class AdminClaseMB implements Serializable {
         } catch (Exception e) {
             System.out.println("Error leyendo archivo " + e);
         }
+        notificarCargaArchivoExitosa();
     }
 
     public void cargarArchivo(InputStream fis) {
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
         String linea;
-        int numeroLinea = 0;
         try {
             while ((linea = br.readLine()) != null) {
-                numeroLinea++;
                 try {
-                    cargarClase(linea, numeroLinea);
+                    cargarClase(linea);
                 } catch (Exception e) {
                     System.out.println("Error leyendo linea " + e);
                 }
@@ -258,51 +282,51 @@ public class AdminClaseMB implements Serializable {
         } catch (Exception e) {
             System.out.println("Error leyendo linea mientras " + e);
         }
-        reportarErrorLeyendoArchivo();
     }
 
-    public void reportarErrorLeyendoArchivo() {
-        if (!errorLineas.isEmpty()) {
-            notificarErrorLineasArchivo(errorLineas);
-        }
-    }
-
-    public void cargarClase(String linea, int numeroLinea) {
+    public void cargarClase(String linea) {
         try {
             String mate = linea.substring(0, linea.indexOf("-"));
-            String carr = linea.substring(linea.indexOf("-") + 1, linea.indexOf("+"));
-            String grupo = linea.substring(linea.indexOf("+") + 1, linea.indexOf("*"));
+            String grupo = linea.substring(linea.indexOf("-") + 1, linea.indexOf("+"));
+            String profe = linea.substring(linea.indexOf("+") + 1, linea.indexOf("*"));
             String dia = linea.substring(linea.indexOf("*") + 1, linea.indexOf("/"));
-            int horaIn = Integer.parseInt(linea.substring(linea.indexOf("/") + 1, linea.indexOf("_")));
-            int horaFi = Integer.parseInt(linea.substring(linea.indexOf("_") + 1, linea.indexOf(",")));
-            String profe = linea.substring(linea.indexOf(",") + 1);
-            
-            Materia mater = fachadaNegocio.getMateriaPorNombre(mate);
-            Clase clase = fachadaNegocio.getClasePorMateriaGrupo(mater, grupo);
-            
-            Horario nuevoHorario = new Horario();
-            nuevoHorario.setClases(clase);
-            nuevoHorario.setDia(dia);
-            nuevoHorario.setHorafin(new BigDecimal(horaFi));
-            nuevoHorario.setHorainicio(new BigDecimal(horaIn));
-            
-            if (Objects.isNull(clase)) {
-                clase = new Clase();
-                clase.setGrupo(grupo);
-                clase.setMateria(mater);
-                clase.setProfesor(profe);
-                List<Horario> hora = new ArrayList();
-                hora.add(nuevoHorario);
-                clase.setHorarioList(hora);
-                boolean creacion = fachadaNegocio.agregarClase(clase);
-            } else {
-                clase.getHorarioList().add(nuevoHorario);
-                boolean modificar = fachadaNegocio.modificarClase(clase);
-            }            
+            BigDecimal horaIn = new BigDecimal(linea.substring(linea.indexOf("/") + 1, linea.indexOf("_")));
+            BigDecimal horaFi = new BigDecimal(linea.substring(linea.indexOf("_") + 1));
 
+            Materia materia = fachadaNegocio.getMateriaPorNombre(mate);
+            if (Objects.nonNull(materia)) {
+                Clase clase = fachadaNegocio.getClasePorMateriaGrupo(materia, grupo);
+                if (Objects.nonNull(clase)) {
+                    crearHorario(clase, dia, horaIn, horaFi);
+                } else {
+                    crearClase(materia, grupo, profe);
+                    clase = fachadaNegocio.getClasePorMateriaGrupo(materia, grupo);
+                    crearHorario(clase, dia, horaIn, horaFi);
+                }
+            }
         } catch (Exception e) {
-            errorLineas += "Error en la linea " + numeroLinea + " <br/>";
+            System.out.println("Error al insertar clase");
         }
+    }
+
+    public void crearClase(Materia materia, String grupo, String profesor) {
+        Clase nuevaClase = new Clase();
+        nuevaClase.setMateria(materia);
+        nuevaClase.setGrupo(grupo);
+        nuevaClase.setProfesor(profesor);
+        nuevaClase.setHorarioList(new ArrayList());
+        materia.getClaseList().add(nuevaClase);
+        fachadaNegocio.modificarMateria(materia);
+    }
+
+    public void crearHorario(Clase clase, String dia, BigDecimal horaInicio, BigDecimal horaFinal) {
+        Horario nuevoHorario = new Horario();
+        nuevoHorario.setDia(dia);
+        nuevoHorario.setHorainicio(horaInicio);
+        nuevoHorario.setHorafin(horaFinal);
+        nuevoHorario.setClases(clase);
+        clase.getHorarioList().add(nuevoHorario);
+        fachadaNegocio.modificarClase(clase);
     }
 
     public boolean existeClase(String nombreMateria) {
@@ -312,8 +336,8 @@ public class AdminClaseMB implements Serializable {
         }
         return true;
     }
-    
-    public Materia buscarMateria(String nombreMateria){
+
+    public Materia buscarMateria(String nombreMateria) {
         return fachadaNegocio.getMateriaPorNombre(nombreMateria);
     }
 
@@ -326,7 +350,7 @@ public class AdminClaseMB implements Serializable {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error eliminando la Clase");
         Messages.addFlashGlobal(msg);
     }
-    
+
     public void notificarEliminacionHorarioExitosa() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino el Horario Exitosamente");
         Messages.addFlashGlobal(msg);
@@ -356,11 +380,25 @@ public class AdminClaseMB implements Serializable {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Hubo un error agregando el horario");
         Messages.addFlashGlobal(msg);
     }
-    
-    public void notificarErrorLineasArchivo(String error) {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", error);
+
+    public void notificarClaseAsignada() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "La clases tiene horarios asignados");
         Messages.addFlashGlobal(msg);
-        this.errorLineas = "";
+    }
+
+    public void notificarErrorHoras() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "La Hora Inicio es mayor a la Hora Fin");
+        Messages.addFlashGlobal(msg);
+    }
+
+    public void notificarSeleccioneDia() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Seleccione un dia");
+        Messages.addFlashGlobal(msg);
     }
     
+    public void notificarCargaArchivoExitosa(){
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Archivo de Clases Cargado Exitosamente.");
+        Messages.addFlashGlobal(msg);       
+    }
+
 }

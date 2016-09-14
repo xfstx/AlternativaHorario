@@ -1,6 +1,7 @@
 package com.proyectogrado.alternativahorario.alternativahorario.web;
 
 import com.proyectogrado.alternativahorario.alternativahorario.negocio.FachadaNegocioLocal;
+import com.proyectogrado.alternativahorario.entidades.Carrera;
 import com.proyectogrado.alternativahorario.entidades.Materia;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,28 +23,58 @@ import org.primefaces.model.DualListModel;
 public class RequisitosMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @EJB
     private FachadaNegocioLocal fachadaNegocio;
 
     @Getter
     @Setter
-    private DualListModel<String> materias;
+    private List<Materia> materias;
+    
+    @Getter
+    @Setter
+    private Materia materiaSeleccionada;
+    
+    @Getter
+    @Setter
+    private List<Materia> materiasRequisitos;
+    
+    @Getter
+    @Setter
+    private Materia requisitoSeleccionado;
+    
+    @Getter
+    @Setter
+    private List<String> carreras;
+    
+    @Getter
+    @Setter
+    private boolean esAddRequisito;
 
     @PostConstruct
     public void init() {
-        List<String> materiasSource = llenarMaterias();
-        List<String> materiasTarget = new ArrayList<String>();
-        materias = new DualListModel<String>(materiasSource, materiasTarget);
+        this.carreras = new ArrayList();
+        limpiarPantalla();
     }
 
-    public List<String> llenarMaterias() {
-        List<Materia> mater = fachadaNegocio.getMaterias();
-        List<String> materiasChar = new ArrayList();
-        for (Materia materiaOrig : mater) {
-            materiasChar.add(materiaOrig.getNombre());
+    public void limpiarPantalla() {       
+        this.esAddRequisito = false;
+        this.materiaSeleccionada = null;
+        this.materias = fachadaNegocio.getMaterias();
+        llenarCarreras();
+    }
+
+    public void llenarCarreras() {
+        List<Carrera> listaCarreras = fachadaNegocio.getCarreras();
+        for (Carrera carrera : listaCarreras) {
+            carreras.add(carrera.getNombre());
         }
-        return materiasChar;
+    }
+    
+    public void cargarRequisitos() {
     }
 
+    public void eliminarRequisito() {
+    }
+    
 }

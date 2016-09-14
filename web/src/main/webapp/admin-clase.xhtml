@@ -12,128 +12,154 @@
                 <h:form id="formAdminClase">
                     <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true" />
                     <h1>Administracion Clase</h1>
-                    <p:outputLabel id="txtSelectMateria" value="Seleccione Materia:"  /><br />
-                    <p:dataTable id="tblMaterias" var="materia" value="#{adminClase.materias}" selection="#{adminClase.materiaSeleccionada}" 
-                                 selectionMode="single" widgetVar="tblMateria" scrollHeight="300"
-                                 emptyMessage="No se encuentran materias con este criterio" scrollable="true"
-                                 rowKey="#{materia.id}" style="margin-bottom:0" resizableColumns="true">
-                        <p:ajax event="rowSelect" listener="#{adminClase.cargarClases}" update=":#{p:component('formAdminClase')}" />
-                        <p:column headerText="Nombre" sortBy="#{materia.nombre}" filterMatchMode="contains">
-                            <h:outputText value="#{materia.nombre}" />
-                        </p:column>
-                        <p:column headerText="Carrera" sortBy="#{materia.carrera.nombre}" filterBy="#{materia.carrera.nombre}" filterMatchMode="exact" >
-                            <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('tblMateria').filter()" >
+                    <h:panelGroup id="pnlMaterias" layout="block" styleClass="fl_container_24">
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_22 fl_suffix_1">
+                            <p:outputLabel id="txtSelectMateria" value="Seleccione Materia:"  />
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <p:dataTable id="tblMaterias" var="materia" value="#{adminClase.materias}" selection="#{adminClase.materiaSeleccionada}" 
+                                         selectionMode="single" widgetVar="tblMateria" scrollHeight="200"
+                                         emptyMessage="No se encuentran materias con este criterio" scrollable="true"
+                                         rowKey="#{materia.id}" style="margin-bottom:0" resizableColumns="true">
+                                <p:ajax event="rowSelect" listener="#{adminClase.cargarClases}" update=":#{p:component('formAdminClase')}" />
+                                <p:column headerText="Nombre" sortBy="#{materia.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{materia.nombre}" />
+                                </p:column>
+                                <p:column headerText="Carrera" sortBy="#{materia.carrera.nombre}" filterBy="#{materia.carrera.nombre}" filterMatchMode="exact" >
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tblMateria').filter()" >
+                                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{adminClase.carreras}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{materia.carrera.nombre}" />
+                                </p:column>
+                                <p:column headerText="Semestre" sortBy="#{materia.semestre}" filterBy="#{materia.semestre}" >
+                                    <f:facet name="filter">
+                                        <p:spinner onchange="PF('tblMateria').filter()" styleClass="year-spinner" min="0">
+                                            <f:converter converterId="javax.faces.Integer" />
+                                        </p:spinner>
+                                    </f:facet>
+                                    <h:outputText value="#{materia.semestre}" />
+                                </p:column>
+                                <p:column headerText="Creditos" sortBy="#{materia.creditos}" >
+                                    <h:outputText value="#{materia.creditos}" />
+                                </p:column>
+                                <p:column headerText="Intensidad Horaria" sortBy="#{materia.intensidadHoraria}" >
+                                    <h:outputText value="#{materia.intensidadHoraria}" />
+                                </p:column>
+                                <f:facet name="footer">
+                                    Materias para Horario
+                                </f:facet>
+                            </p:dataTable> 
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    <p:spacer height="15"/>
+                    <h:panelGroup id="pnlDatosClase" layout="block" styleClass="fl_container_24">
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_10 fl_suffix_1">
+                            <p:outputLabel id="txtSelectClases" value="Seleccione Clases :" styleClass="ui-expanded-widget-horizontal" />
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <p:dataTable id="tblClases" var="clase" value="#{adminClase.clases}" selection="#{adminClase.claseSeleccionada}"
+                                         selectionMode="single" widgetVar="tblClases" 
+                                         emptyMessage="No se encuentran clases" scrollable="true"
+                                         rowKey="#{clase.id}" style="margin-bottom:0" resizableColumns="true" styleClass="ui-expanded-widget-horizontal" >
+                                <p:ajax event="rowSelect" listener="#{adminClase.cargarHorarios}" update=":#{p:component('formAdminClase')}" />
+                                <p:column headerText="Id" >
+                                    <h:outputText value="#{clase.id}" />
+                                </p:column>
+                                <p:column headerText="Grupo" >
+                                    <h:outputText value="#{clase.grupo}" />
+                                </p:column>
+                                <p:column headerText="Profesor" >
+                                    <h:outputText value="#{clase.profesor}" />
+                                </p:column> 
+                                <f:facet name="footer">
+                                    <p:spacer width="30"/>
+                                    <p:commandButton id="btonEliminarClase" value="Eliminar Clase" icon="ui-icon-closethick" actionListener="#{adminClase.eliminarClase}" update="tblClases"/>                            
+                                    <p:spacer width="30"/>
+                                    <p:commandButton id="btonAgregarClase" value="Agregar Clase" actionListener="#{adminClase.setEsAddClase(true)}" icon="ui-icon-plus" update=":#{p:component('formAdminClase')}" disabled="#{adminClase.materiaSeleccionada == null}"/>
+                                </f:facet>                        
+                            </p:dataTable>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_10 fl_suffix_1" >
+                            <p:outputLabel id="txtSelectHorario" value="Seleccione Horario:"  styleClass="ui-expanded-widget-horizontal"/>
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <p:dataTable id="tblHorario" var="horario" value="#{adminClase.horarios}" selection="#{adminClase.horarioSeleccionado}"
+                                         selectionMode="single" widgetVar="tblHorario" emptyMessage="No se encuentran horarios" scrollable="true"
+                                         rowKey="#{horario.id}" style="margin-bottom:0" resizableColumns="true" styleClass="ui-expanded-widget-horizontal">
+                                <p:column headerText="Dia" >
+                                    <h:outputText value="#{horario.dia}" />
+                                </p:column>
+                                <p:column headerText="Hora Inicio" >
+                                    <h:outputText value="#{horario.horainicio}" />
+                                </p:column>
+                                <p:column headerText="Hora Fin" >
+                                    <h:outputText value="#{horario.horafin}" />
+                                </p:column> 
+                                <f:facet name="footer">
+                                    <p:spacer width="30"/>
+                                    <p:commandButton id="btonEliminarHorario" value="Eliminar Horario" icon="ui-icon-closethick" actionListener="#{adminClase.eliminarHorarios}" update="tblHorario"/>                            
+                                    <p:spacer width="30"/>
+                                    <p:commandButton id="btonAgregarHorario" value="Agregar Horario" icon="ui-icon-plus" actionListener="#{adminClase.setEsAddHorario(true)}" update=":#{p:component('formAdminClase')}" disabled="#{adminClase.claseSeleccionada == null}" />
+                                </f:facet>
+                            </p:dataTable>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="fl_clear"/>
+                    </h:panelGroup>
+
+                    <p:spacer height="15"/>
+                    <h:panelGroup id="pnlDatosAddClase" layout="block" styleClass="fl_container_24" >
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_10 fl_suffix_1" rendered="#{adminClase.esAddClase}" >
+                            <p:outputLabel id="txtAddClases" value="Agregar Clases :" styleClass="ui-expanded-widget-horizontal" />
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+                                <p:outputLabel for="txtGrupo" value="Grupo : " />
+                                <p:inputText id="txtGrupo" value="#{adminClase.grupo}" required="true" />
+                                <p:outputLabel for="txtProfesor" value="Profesor : " />
+                                <p:inputText id="txtProfesor" value="#{adminClase.profesor}" required="true" />                            
+                            </h:panelGrid>
+                            <br />
+                            <p:commandButton value="Agregar Clase" actionListener="#{adminClase.agregarClase()}" update=":#{p:component('formAdminClase')}" />
+                        </h:panelGroup>
+                    </h:panelGroup>    
+                    <h:panelGroup id="pnlDatosAddHorario" layout="block" styleClass="fl_container_24" >
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_10 fl_suffix_1" rendered="#{adminClase.esAddHorario}">
+                            <p:spacer styleClass="ui-expanded-widget-horizontal" />
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_10 fl_suffix_1" rendered="#{adminClase.esAddHorario}">
+                            <p:outputLabel id="txtAddHorario" value="Agregar Horario:"  styleClass="ui-expanded-widget-horizontal"/>
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <h:panelGrid columns="3" cellpadding="5" class="ui-grid">
+                                <p:outputLabel value="Dia :" />    
+                                <p:spacer width="100" /> 
+                                <p:selectOneMenu id="slcDia" value="#{adminClase.dia}" required="true">
                                     <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{adminClase.carreras}" />
+                                    <f:selectItems value="#{adminClase.dias}" />                        
                                 </p:selectOneMenu>
-                            </f:facet>
-                            <h:outputText value="#{materia.carrera.nombre}" />
-                        </p:column>
-                        <p:column headerText="Semestre" sortBy="#{materia.semestre}" filterBy="#{materia.semestre}" >
-                            <f:facet name="filter">
-                                <p:spinner onchange="PF('tblMateria').filter()" styleClass="year-spinner" min="0">
-                                    <f:converter converterId="javax.faces.Integer" />
-                                </p:spinner>
-                            </f:facet>
-                            <h:outputText value="#{materia.semestre}" />
-                        </p:column>
-                        <p:column headerText="Creditos" sortBy="#{materia.creditos}" >
-                            <h:outputText value="#{materia.creditos}" />
-                        </p:column>
-                        <p:column headerText="Intensidad Horaria" sortBy="#{materia.intensidadHoraria}" >
-                            <h:outputText value="#{materia.intensidadHoraria}" />
-                        </p:column>
-                        <f:facet name="footer">
-                            Materias para Horario
-                        </f:facet>
-                    </p:dataTable> 
 
-                    <p:separator />
+                                <p:outputLabel value="Hora Inicial :" />
+                                <p:slider for="horaIni" minValue="6" maxValue="21" />
+                                <p:inputText id="horaIni" value="#{adminClase.horaInicio}" style="width: 100px" required="true" />
 
-                    <p:outputLabel id="txtSelectClases" value="Seleccione Clases :"  /><br />
+                                <p:outputLabel value="Hora Final :" />
+                                <p:slider for="horaFin" minValue="7" maxValue="22" />
+                                <p:inputText id="horaFin" value="#{adminClase.horaFin}" style="width: 100px" required="true" />                            
+                            </h:panelGrid>
+                            <br />
+                            <p:commandButton value="Agregar Horario" actionListener="#{adminClase.agregarHorario}" update=":#{p:component('formAdminClase')}" />
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="fl_clear"/>
 
-                    <p:dataTable id="tblClases" var="clase" value="#{adminClase.clases}" selection="#{adminClase.claseSeleccionada}"
-                                 selectionMode="single" widgetVar="tblClases" 
-                                 emptyMessage="No se encuentran clases" scrollable="true"
-                                 rowKey="#{clase.id}" style="margin-bottom:0" resizableColumns="true">
-                        <p:ajax event="rowSelect" listener="#{adminClase.cargarHorarios}" update=":#{p:component('formAdminClase')}" />
-                        <p:column headerText="Id" >
-                            <h:outputText value="#{clase.id}" />
-                        </p:column>
-                        <p:column headerText="Grupo" >
-                            <h:outputText value="#{clase.grupo}" />
-                        </p:column>
-                        <p:column headerText="Profesor" >
-                            <h:outputText value="#{clase.profesor}" />
-                        </p:column> 
-                        <f:facet name="footer">
-                            <p:spacer width="30"/>
-                            <p:commandButton id="btonEliminarClase" value="Eliminar Clase" icon="ui-icon-closethick" actionListener="#{adminClase.eliminarClase}" update="tblClases"/>                            
-                            <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregarClase" value="Agregar Clase" icon="ui-icon-plus" type="button" onclick="PF('pnlAddClass').show();" disabled="#{adminClase.materiaSeleccionada == null}"/>
-                        </f:facet>                        
-                    </p:dataTable>
+                    </h:panelGroup>
 
-                    <p:separator />
-
-                    <p:outputLabel id="txtSelectHorario" value="Seleccione Horario:"  /><br />
-
-                    <p:dataTable id="tblHorario" var="horario" value="#{adminClase.horarios}" selection="#{adminClase.horarioSeleccionado}"
-                                 selectionMode="single" widgetVar="tblHorario" emptyMessage="No se encuentran horarios" scrollable="true"
-                                 rowKey="#{horario.id}" style="margin-bottom:0" resizableColumns="true">
-                        <p:column headerText="Dia" >
-                            <h:outputText value="#{horario.dia}" />
-                        </p:column>
-                        <p:column headerText="Hora Inicio" >
-                            <h:outputText value="#{adminClase.getFechaFormateada(horario.horainicio)}" />
-                        </p:column>
-                        <p:column headerText="Hora Fin" >
-                            <h:outputText value="#{adminClase.getFechaFormateada(horario.horafin)}" />
-                        </p:column> 
-                        <f:facet name="footer">
-                            <p:spacer width="30"/>
-                            <p:commandButton id="btonEliminarHorario" value="Eliminar Horario" icon="ui-icon-closethick" actionListener="#{adminClase.eliminarHorarios}" update="tblHorario"/>                            
-                            <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregarHorario" value="Agregar Horario" type="button" icon="ui-icon-plus" onclick="PF('pnlAgregarHorario').show();" disabled="#{adminClase.claseSeleccionada == null}" />
-                        </f:facet>
-                    </p:dataTable>
-                    <br />
+                    <p:spacer height="30"/>
                     <p:fileUpload fileUploadListener="#{adminClase.upload}" mode="advanced" dragDropSupport="false"
-                                  update="msgs" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
+                                  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
 
-                    <p:dialog id="pnlAgregarHorario" header="Agregar Horario" widgetVar="pnlAgregarHorario" resizable="false" dynamic="true">
-                        <h:panelGrid columns="3" cellpadding="5" class="ui-grid">
-                            <p:outputLabel value="Dia :" />    
-                            <p:outputLabel for="slcDia" value="-------------------------:" /> 
-                            <p:selectOneMenu id="slcDia" value="#{adminClase.dia}" required="true">
-                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{adminClase.dias}" />                        
-                            </p:selectOneMenu>
-                            
-                            <p:outputLabel value="Hora Inicial :" />
-                            <p:slider for="horaIni" minValue="6" maxValue="21" />
-                            <p:inputText id="horaIni" value="#{adminClase.horaInicio}" style="width: 100px" required="true" />
-                            
-                            <p:outputLabel value="Hora Final :" />
-                            <p:slider for="horaFin" minValue="7" maxValue="22" />
-                            <p:inputText id="horaFin" value="#{adminClase.horaFin}" style="width: 100px" required="true" />                            
-                        </h:panelGrid>
-                        <br />
-                        <p:commandButton value="Agregar Horario" actionListener="#{adminClase.agregarHorario}" update="tblHorario"/>
-                    </p:dialog>
-                    
-                    <p:dialog header="Agregar Clase" widgetVar="pnlAddClass" >
-                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
-                            <p:outputLabel for="txtGrupo" value="Grupo : " />
-                            <p:inputText id="txtGrupo" value="#{adminClase.grupo}" required="true" />
-                            <p:outputLabel for="txtProfesor" value="Profesor : " />
-                            <p:inputText id="txtProfesor" value="#{adminClase.profesor}" required="true" />                            
-                        </h:panelGrid>
-                        <br />
-                        <p:commandButton value="Agregar Clase" actionListener="#{adminClase.prueba}" />
-                    </p:dialog>
-                    
                 </h:form>                
             </ui:define>
         </ui:composition>

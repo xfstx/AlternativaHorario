@@ -5,28 +5,79 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
-
     <body>
-
-        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
-
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">            
             <ui:define name="content">
                 <h:form id="formRequisitos">
-                    <center>
-                        <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
-                        <h1>Requisitos Materia</h1> 
-                        <br />
-                        <h:panelGroup id="pnlPickMaterias" style="width: 300px; border: #000000">
-                            <p:pickList id="pickList" value="#{requisitos.materias}" var="materias" itemLabel="#{materias}" itemValue="#{materias}" style="width: 100%"/>
-                        </h:panelGroup>
-                        <p:commandButton id="btnAgregarRequisito" value="Agregar Requisito" />
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <h1>Requisitos Materia</h1> 
 
-                    </center>
+                    <p:spacer height="15"/>
+                    <h:panelGroup id="pnlMateRequisitos" layout="block" styleClass="fl_container_24">
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_10 fl_suffix_1">
+                            <p:outputLabel id="txtSelectMateria" value="Seleccione Materia :" styleClass="ui-expanded-widget-horizontal" />
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <p:dataTable id="tblMaterias" var="materia" value="#{requisitos.materias}" selection="#{requisitos.materiaSeleccionada}"
+                                         selectionMode="single" widgetVar="tblMaterias" 
+                                         emptyMessage="No se encuentran materias" scrollable="true" scrollHeight="200"
+                                         rowKey="#{materia.id}" style="margin-bottom:0" resizableColumns="true" styleClass="ui-expanded-widget-horizontal" >
+                                <p:ajax event="rowSelect" listener="#{requisitos.cargarRequisitos}" update=":#{p:component('formRequisitos')}" />
+                                <p:column headerText="Nombre" sortBy="#{materia.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{materia.nombre}" />
+                                </p:column>
+                                <p:column headerText="Carrera" sortBy="#{materia.carrera.nombre}" filterBy="#{materia.carrera.nombre}" filterMatchMode="exact" >
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tblMaterias').filter()" >
+                                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{requisitos.carreras}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{materia.carrera.nombre}" />
+                                </p:column>
+                                <p:column headerText="Semestre" sortBy="#{materia.semestre}" filterBy="#{materia.semestre}" >
+                                    <f:facet name="filter">
+                                        <p:spinner onchange="PF('tblMaterias').filter()" styleClass="year-spinner" min="0">
+                                            <f:converter converterId="javax.faces.Integer" />
+                                        </p:spinner>
+                                    </f:facet>
+                                    <h:outputText value="#{materia.semestre}" />
+                                </p:column>
+                                <f:facet name="footer">
+                                    <p:spacer width="30"/>
+                                </f:facet>
+                            </p:dataTable>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_10 fl_suffix_1" >
+                            <p:outputLabel id="txtMateriasRequisito" value="Materias Requisito : "  styleClass="ui-expanded-widget-horizontal"/>
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <p:dataTable id="tblRequisitos" var="matrequisito" value="#{requisitos.materiasRequisitos}" selection="#{requisitos.requisitoSeleccionado}"
+                                         selectionMode="single" widgetVar="tblRequisitos" emptyMessage="No se encuentran requisitos" scrollable="true" scrollHeight="200"
+                                         rowKey="#{matrequisito.id}" style="margin-bottom:0" resizableColumns="true" styleClass="ui-expanded-widget-horizontal">
+                                <p:column headerText="Nombre" sortBy="#{matrequisito.nombre}" >
+                                    <h:outputText value="#{matrequisito.nombre}" />
+                                </p:column>
+                                <p:column headerText="Carrera" sortBy="#{matrequisito.carrera.nombre}" >
+                                    <h:outputText value="#{matrequisito.carrera.nombre}" />
+                                </p:column>
+                                <p:column headerText="Semestre" sortBy="#{matrequisito.semestre}" >     
+                                    <h:outputText value="#{matrequisito.semestre}" />
+                                </p:column>
+                                <f:facet name="footer">
+                                    <p:spacer width="30"/>
+                                    <p:commandButton id="btonEliminarRequisito" value="Eliminar Requisito" icon="ui-icon-closethick" actionListener="#{requisitos.eliminarRequisito}" update="tblRequisitos"/>                            
+                                    <p:spacer width="30"/>
+                                    <p:commandButton id="btonAgregarRequisito" value="Agregar Requisito" icon="ui-icon-plus" actionListener="#{requisitos.setEsAddRequisito(true)}" update=":#{p:component('formRequisitos')}" disabled="#{requisitos.materiaSeleccionada == null}" />
+                                </f:facet>
+                            </p:dataTable>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="fl_clear"/>
+                    </h:panelGroup>
+
                 </h:form>
             </ui:define>
-
         </ui:composition>
-
     </body>
 </html>
 

@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+        <ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="metadata">
+                <f:metadata>
+                    <f:viewParam name="nombre" value="#{modificacionMateria.nombre}"/>               
+                    <f:viewAction action="#{modificacionMateria.cargarDatos()}"/>
+                </f:metadata>
+            </ui:define>
+            <ui:define name="content">
+                <h:form id="formModificacionMateria">
+                    <p:growl id="msgs" autoUpdate="true" showDetail="true" globalOnly="true"/>
+                    <h1>Modificar Materia</h1> 
+                    <br/>
+                    <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
+                        <p:outputLabel for="txtNombre" value="Nombre :"  />
+                        <p:inputText id="txtNombre" value="#{modificacionMateria.nombre}" required="true" /> 
+
+                        <p:outputLabel for="slcCarrera" value="Carrera :" />
+                        <p:selectOneMenu id="slcCarrera" value="#{modificacionMateria.carrera}" required="true">
+                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{modificacionMateria.carreras}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="txtSemestres" value="Semestres :" />
+                        <p:spinner id="txtSemestres" value="#{modificacionMateria.semestres}" min="0" max="15" required="true"/>
+
+                        <h:outputLabel for="txtCreditos" value="Creditos :" />
+                        <p:spinner id="txtCreditos" value="#{modificacionMateria.creditos}" min="0" max="5" required="true"/>
+
+                        <h:outputLabel for="txtIntensidad" value="Intensidad Horaria :" />
+                        <p:spinner id="txtIntensidad" value="#{modificacionMateria.intesidadHoraria}" min="0" max="5" required="true"/>
+
+                    </h:panelGrid>
+                    <br />
+                    <p:commandButton id="btonModificar" value="Modificar" actionListener="#{modificacionMateria.modificarMateria()}" action="admin-materia.xhtml" />
+                    <br />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+

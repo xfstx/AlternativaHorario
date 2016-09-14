@@ -17,7 +17,6 @@ import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.omnifaces.util.Messages;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -73,10 +72,6 @@ public class AdminMateriaMB implements Serializable {
     @Getter
     @Setter
     private Materia materiaMod;
-    
-    @Getter
-    @Setter
-    private String errorLineas;
 
     public AdminMateriaMB() {
     }
@@ -91,7 +86,6 @@ public class AdminMateriaMB implements Serializable {
     public void limpiarPantalla() {
         this.materias = fachadaNegocio.getMaterias();
         this.cantidadMaterias = materias.size();
-        this.errorLineas = "";
     }
 
     public void limpiarAgregar() {
@@ -155,7 +149,6 @@ public class AdminMateriaMB implements Serializable {
             materia.setIntensidadHoraria(this.intesidadHoraria);
             boolean creacion = fachadaNegocio.agregarMateria(materia);
             if (creacion) {
-                cerrarCrearDialog();
                 limpiarPantalla();
                 limpiarAgregar();
                 notificarCreacionExitosa();
@@ -165,11 +158,6 @@ public class AdminMateriaMB implements Serializable {
         }
     }
 
-    public void cerrarCrearDialog() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlAgregarMateria').hide();");
-    }
-
     public boolean validarMateria() {
         Materia materia = fachadaNegocio.getMateriaPorNombre(nombre);
         if (materia != null) {
@@ -177,29 +165,6 @@ public class AdminMateriaMB implements Serializable {
             return false;
         }
         return true;
-    }
-
-    public void abrirModificarMateria(Materia materia) {
-        this.materiaMod = materia;
-        this.nombre = materia.getNombre();
-        determinarCarrera(materia);
-        this.semestres = materia.getSemestre();
-        this.creditos = materia.getCreditos();
-        this.intesidadHoraria = materia.getIntensidadHoraria();
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('pnlModificarMateria').show();");
-    }
-
-    public void modificarMateria() {
-        boolean modifica;
-        if (validarMateriaMod()) {
-            modifica = fachadaNegocio.modificarMateria(this.materiaMod);
-            if (modifica) {
-                notificarModificacionExitosa();
-            } else {
-                notificarModificacionFallida();
-            }
-        }
     }
 
     public boolean validarMateriaMod() {
@@ -253,15 +218,9 @@ public class AdminMateriaMB implements Serializable {
         } catch (Exception e) {
             System.out.println("Error leyendo linea mientras "+e);
         }
-        reportarErrorLeyendoArchivo();
+        notificarArchivoCargado();
     }
         
-    public void reportarErrorLeyendoArchivo(){
-        if(!errorLineas.isEmpty()){
-            notificarErrorLineasArchivo(errorLineas);
-        }        
-    }
-
     public void cargarMateria(String linea, int numeroLinea) {
         try {
             System.out.println("" + linea);
@@ -276,13 +235,10 @@ public class AdminMateriaMB implements Serializable {
             nuevaMateria.setSemestre(semes);
             nuevaMateria.setCreditos(credi);
             nuevaMateria.setIntensidadHoraria(inten);
-            boolean creacion = fachadaNegocio.agregarMateria(nuevaMateria);
-            if(creacion){
-                errorLineas += "Error con la linea "+numeroLinea+" <br/>";
-            }
+            boolean creacion = fachadaNegocio.agregarMateria(nuevaMateria);            
         } catch (Exception e) {
-            errorLineas += "Error en la linea "+numeroLinea+" <br/>";
-        }        
+            System.out.println("Error cargando materia "+ e);
+        }
     }
 
     public void notificarNoSeleccion() {
@@ -291,7 +247,7 @@ public class AdminMateriaMB implements Serializable {
     }
 
     public void notificarEliminacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "Se elimino la/s Materia/s Exitosamente");
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Se elimino la/s Materia/s Exitosamente");
         Messages.addFlashGlobal(msg);
     }
 
@@ -315,25 +271,14 @@ public class AdminMateriaMB implements Serializable {
         Messages.addFlashGlobal(msg);
     }
 
-    public void notificarModificacionExitosa() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Materia Modificada Exitosamente");
-        Messages.addFlashGlobal(msg);
-    }
-
     public void notificarNoCambio() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "ERROR", "No se han hecho cambios en la Materia");
         Messages.addFlashGlobal(msg);
     }
-
-    public void notificarModificacionFallida() {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Hubo un error en la Modificacion de la Materia");
+    
+    public void notificarArchivoCargado() {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "Archivo cargado");
         Messages.addFlashGlobal(msg);
     }
     
-    public void notificarErrorLineasArchivo(String error) {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", error);
-        Messages.addFlashGlobal(msg);
-        this.errorLineas = "";
-    }
-
 }

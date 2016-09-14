@@ -52,53 +52,25 @@
                         </p:column>
 
                         <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminMateria.abrirModificarMateria(materia)}" icon="ui-icon-pencil" />
+                            <p:link styleClass="ui-icon ui-icon-pencil" outcome="modificacion-materia.xhtml" title="Modificar" >
+                                <f:param name="nombre" value="#{materia.nombre}"/>
+                            </p:link>
                         </p:column>
 
                         <p:column style="width:40px; text-align:center;">
-                            <p:commandButton actionListener="#{adminMateria.eliminarMateria(materia)}" icon="ui-icon-closethick" update="tblMaterias"/>
+                            <p:commandLink actionListener="#{adminMateria.eliminarMateria(materia)}" styleClass="ui-icon ui-icon-closethick" title="Eliminar" update="tblMaterias"/>
                         </p:column>
 
                         <f:facet name="footer">
                             <p:spacer width="30"/>
                             <p:commandButton id="btonEliminar" value="Eliminar Materias" icon="ui-icon-closethick" actionListener="#{adminMateria.eliminarMaterias}" update="tblMaterias"/>
                             <p:spacer width="30"/>
-                            <p:commandButton id="btonAgregar" value="Agregar Materia" icon="fa-plus-square" onclick="PF('pnlAgregarMateria').show();"/>                            
+                            <p:commandButton id="btonAgregar" value="Agregar Materia" icon="fa-plus-square" action="adiciona-materia.xhtml" />                            
                         </f:facet>
                     </p:dataTable> 
-
                     <br />
-                    <p:fileUpload fileUploadListener="#{adminMateria.upload}" mode="advanced" dragDropSupport="false"
-                                  update="msgs" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
-
-                    <p:dialog header="Agregar Materia" widgetVar="pnlAgregarMateria" showEffect="explode" hideEffect="bounce">
-                        <h:panelGrid columns="2" cellpadding="5" class="ui-grid">
-                            <p:outputLabel for="txtNombre" value="Nombre :"  />
-                            <p:inputText id="txtNombre" value="#{adminMateria.nombre}" required="true" /> 
-
-                            <p:outputLabel for="slcCarrera" value="Carrera :" />
-                            <p:selectOneMenu id="slcCarrera" value="#{adminMateria.carrera}" required="true">
-                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{adminMateria.carreras}"/>
-                            </p:selectOneMenu>
-
-                            <h:outputLabel for="txtSemestres" value="Semestres :" />
-                            <p:spinner id="txtSemestres" value="#{adminMateria.semestres}" min="0" max="15" required="true"/>
-
-                            <h:outputLabel for="txtCreditos" value="Creditos :" />
-                            <p:spinner id="txtCreditos" value="#{adminMateria.creditos}" min="0" max="5" required="true"/>
-
-                            <h:outputLabel for="txtIntensidad" value="Intensidad Horaria :" />
-                            <p:spinner id="txtIntensidad" value="#{adminMateria.intesidadHoraria}" min="0" max="5" required="true"/>
-
-                        </h:panelGrid>
-                        <br />
-                        <p:commandButton value="Agregar Materia" actionListener="#{adminMateria.agregarMateria}" update="tblMaterias"/>
-                    </p:dialog>
-
                 </h:form>
             </ui:define>
-
         </ui:composition>
 
     </body>
