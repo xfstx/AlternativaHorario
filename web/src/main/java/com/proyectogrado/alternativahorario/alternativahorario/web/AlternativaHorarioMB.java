@@ -6,7 +6,6 @@ import com.proyectogrado.alternativahorario.entidades.Clase;
 import com.proyectogrado.alternativahorario.entidades.Horario;
 import com.proyectogrado.alternativahorario.entidades.Materia;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -88,7 +87,7 @@ public class AlternativaHorarioMB implements Serializable {
         this.materiasElegidas = new ArrayList();
         limpiarPantalla();
         llenarTablasHorarios();
-        cargarHorariosResultado(); // TODO ELIM
+        //cargarHorariosResultado(); // Activar para pruebas graficas
     }
 
     public void limpiarPantalla() {
@@ -157,7 +156,7 @@ public class AlternativaHorarioMB implements Serializable {
         }
     }
 
-    // TODO ELIIIM !!!
+    // TODO ELIIIM !!! // Activar para pruebas graficas
     public void cargarResultadoPruebaGraficaTODOELIM(){
         List<Clase> clasesPrueba = fachadaNegocio.getClases();
         List<Clase> clasesOrder = new ArrayList();
@@ -171,8 +170,8 @@ public class AlternativaHorarioMB implements Serializable {
     }
     
     public void cargarHorariosResultado() {
-        cargarResultadoPruebaGraficaTODOELIM();
-        //this.resultado = fachadaNegocio.calcularAlternativa(materiasElegidas);
+        //cargarResultadoPruebaGraficaTODOELIM(); // Activar para pruebas graficas
+        this.resultado = fachadaNegocio.calcularAlternativa(materiasElegidas);
         if (resultado.isEmpty()) {
             notificarNoResultado();
         } else {

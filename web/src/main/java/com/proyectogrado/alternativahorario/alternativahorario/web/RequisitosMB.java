@@ -12,7 +12,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
-import org.primefaces.model.DualListModel;
 
 /**
  *
@@ -30,23 +29,31 @@ public class RequisitosMB implements Serializable {
     @Getter
     @Setter
     private List<Materia> materias;
-    
+
     @Getter
     @Setter
     private Materia materiaSeleccionada;
-    
+
     @Getter
     @Setter
     private List<Materia> materiasRequisitos;
-    
+
     @Getter
     @Setter
     private Materia requisitoSeleccionado;
-    
+
+    @Getter
+    @Setter
+    private List<Materia> materiasAdd;
+
+    @Getter
+    @Setter
+    private List<Materia> materiasAddSeleccionadas;
+
     @Getter
     @Setter
     private List<String> carreras;
-    
+
     @Getter
     @Setter
     private boolean esAddRequisito;
@@ -57,10 +64,11 @@ public class RequisitosMB implements Serializable {
         limpiarPantalla();
     }
 
-    public void limpiarPantalla() {       
+    public void limpiarPantalla() {
         this.esAddRequisito = false;
         this.materiaSeleccionada = null;
         this.materias = fachadaNegocio.getMaterias();
+        this.materiasAdd = fachadaNegocio.getMaterias();
         llenarCarreras();
     }
 
@@ -70,11 +78,18 @@ public class RequisitosMB implements Serializable {
             carreras.add(carrera.getNombre());
         }
     }
-    
+
     public void cargarRequisitos() {
     }
 
     public void eliminarRequisito() {
     }
+
+    public void agregarRequisito() {
+        this.esAddRequisito = false;
+    }
     
+    public void upload() {
+    }
+
 }

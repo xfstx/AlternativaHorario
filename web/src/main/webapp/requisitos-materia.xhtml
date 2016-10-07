@@ -74,7 +74,48 @@
                         </h:panelGroup>
                         <h:panelGroup layout="block" styleClass="fl_clear"/>
                     </h:panelGroup>
-
+                    <p:spacer height="20"/>
+                    <h:panelGroup id="pnlDatosAddRequisito" layout="block" styleClass="fl_container_24" >
+                        <h:panelGroup layout="block" styleClass="fl_prefix_1 fl_grid_22 fl_suffix_1" rendered="#{requisitos.esAddRequisito}">
+                            <p:outputLabel id="txtAddRequisito" value="Agregar Requisito :"  styleClass="ui-expanded-widget-horizontal"/>
+                            <h:panelGroup layout="block" styleClass="fl_clear"/>
+                            <p:spacer height="10"/>
+                            <p:dataTable id="tblAddMaterias" var="addmateria" value="#{requisitos.materiasAdd}" selection="#{requisitos.materiasAddSeleccionadas}"
+                                         selectionMode="single" widgetVar="tblAddMaterias" 
+                                         emptyMessage="No se encuentran materias" scrollable="true" scrollHeight="200"
+                                         rowKey="#{addmateria.id}" style="margin-bottom:0" resizableColumns="true" styleClass="ui-expanded-widget-horizontal" >
+                                <p:column headerText="Nombre" sortBy="#{addmateria.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{addmateria.nombre}" />
+                                </p:column>
+                                <p:column headerText="Carrera" sortBy="#{maaddmateriateria.carrera.nombre}" filterBy="#{addmateria.carrera.nombre}" filterMatchMode="exact" >
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tblAddMaterias').filter()" >
+                                            <f:selectItem itemLabel="Seleccione" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{requisitos.carreras}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{addmateria.carrera.nombre}" />
+                                </p:column>
+                                <p:column headerText="Semestre" sortBy="#{addmateria.semestre}" filterBy="#{addmateria.semestre}" >
+                                    <f:facet name="filter">
+                                        <p:spinner onchange="PF('tblAddMaterias').filter()" styleClass="year-spinner" min="0">
+                                            <f:converter converterId="javax.faces.Integer" />
+                                        </p:spinner>
+                                    </f:facet>
+                                    <h:outputText value="#{addmateria.semestre}" />
+                                </p:column>
+                                <f:facet name="footer">
+                                    <p:spacer width="30"/>
+                                </f:facet>
+                            </p:dataTable>
+                            <br />
+                            <p:commandButton value="Agregar Requisito" actionListener="#{requisitos.agregarRequisito}" update=":#{p:component('formRequisitos')}" />
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="fl_clear"/>
+                    </h:panelGroup>
+                    <p:spacer height="30"/>
+                    <p:fileUpload fileUploadListener="#{requisitos.upload}" mode="advanced" dragDropSupport="false"
+                                  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(txt)$/" />
                 </h:form>
             </ui:define>
         </ui:composition>
